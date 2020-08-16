@@ -40,7 +40,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           BottomNavigationBarItem(
               icon: Icon(Icons.assessment), title: Text("Converter")),
         ],
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Color(0xffdc9a2a),
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),

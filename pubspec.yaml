@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  shared_preferences: ^0.5.8
   flutter_svg: ^0.18.0
   http: ^0.12.2
 
