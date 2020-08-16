@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CurrencyConverter extends StatefulWidget {
   @override
@@ -11,6 +13,36 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   CurrencyType _buyCurrencyType = CurrencyType.USD;
   CurrencyType _sellCurrencytype = CurrencyType.USD;
 
+  _buildCurrencyIcon(CurrencyType t) {
+    var assetName = "";
+
+    if (t == CurrencyType.USD) {
+      assetName = 'lib/assets/img/dollar-sign.svg';
+    }
+
+    if (t == CurrencyType.EUR) {
+      assetName = 'lib/assets/img/euro-sign.svg';
+    }
+
+    if (t == CurrencyType.RUB) {
+      assetName = 'lib/assets/img/ruble-sign.svg';
+    }
+
+    return SvgPicture.asset(
+      assetName,
+      height: 20.0,
+      width: 20.0,
+    );
+  }
+
+  _handleBuyInputChanges(String v) {
+    print(v);
+  }
+
+  _handleSellInputChanges(String v) {
+    print(v);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,16 +51,20 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
         Container(
           margin: EdgeInsets.only(bottom: 20),
           child: TextField(
+            keyboardType: TextInputType.number,
+            onChanged: _handleBuyInputChanges,
             decoration: InputDecoration(
-                icon: Icon(Icons.send),
+                icon: _buildCurrencyIcon(_buyCurrencyType),
                 border: OutlineInputBorder(),
                 labelText: 'Buy (from)'),
           ),
         ),
         Container(
           child: TextField(
+            keyboardType: TextInputType.number,
+            onChanged: _handleSellInputChanges,
             decoration: InputDecoration(
-                icon: Icon(Icons.send),
+                icon: _buildCurrencyIcon(_sellCurrencytype),
                 border: OutlineInputBorder(),
                 labelText: 'Sell (to)'),
           ),
@@ -37,7 +73,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
           margin: EdgeInsets.only(top: 20),
           child: Column(children: [
             const Text(
-              'Sell currency',
+              'Buy currency',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
             ),
             Row(mainAxisSize: MainAxisSize.min, children: [
@@ -80,7 +116,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
             // ===
 
             const Text(
-              'Buy currency',
+              'Sell currency',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
             ),
             Row(mainAxisSize: MainAxisSize.min, children: [
@@ -88,7 +124,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                   child: RadioListTile(
                 title: const Text('USD'),
                 value: CurrencyType.USD,
-                groupValue: _buyCurrencyType,
+                groupValue: _sellCurrencytype,
                 onChanged: (CurrencyType v) {
                   setState(() {
                     _sellCurrencytype = v;

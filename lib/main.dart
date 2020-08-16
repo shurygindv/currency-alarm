@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:currency_alarm/screens/home.dart';
+import 'package:currency_alarm/screens/home/home.dart';
 
 void main() => runApp(Application());
 

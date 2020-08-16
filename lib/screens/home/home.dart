@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:currency_alarm/widgets/currency-list.dart';
-import 'package:currency_alarm/widgets/currency-converter.dart';
+import './widgets/currency-converter.dart';
+import './widgets/dashboard.dart';
 
 class HomePageWidget extends StatefulWidget {
   HomePageWidget({Key key}) : super(key: key);
@@ -13,12 +13,9 @@ class HomePageWidget extends StatefulWidget {
 class _HomePageWidgetState extends State<HomePageWidget> {
   int _selectedIndex = 0;
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
   static List<Widget> _widgetOptions = <Widget>[
+    DashboardView(),
     CurrencyConverter(),
-    Text('DDDD', style: optionStyle),
   ];
 
   _onItemTapped(int index) {
@@ -30,7 +27,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-            'Cs Alarm',
+            'Currency Alarm',
             style: TextStyle(color: Colors.black, fontSize: 30),
           ),
           elevation: 0.0,
