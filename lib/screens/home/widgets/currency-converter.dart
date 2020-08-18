@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:currency_alarm/services/api.dart';
+import 'package:currency_alarm/libs/debouncer.dart';
+
+final _debouncer = Debouncer(delay: Duration(milliseconds: 300));
+
 class CurrencyConverter extends StatefulWidget {
   @override
   _CurrencyConverterState createState() => _CurrencyConverterState();
 }
-
-enum CurrencyType { USD, RUB, EUR }
 
 class _CurrencyConverterState extends State<CurrencyConverter> {
   CurrencyType _buyCurrencyType = CurrencyType.USD;
@@ -35,12 +38,25 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
     );
   }
 
+  Future<void> _convertCurrency(String currency) async {
+    return await CurrencyApi.convertRate(currency,
+        from: _buyCurrencyType, to: _sellCurrencytype);
+  }
+
+  _updateConvertingValuesAsync(String currency) async {
+    var result = await _convertCurrency(currency);
+  }
+
+  _debounceConvertCurrencies(String currency) {
+    _debouncer.run(() => {_updateConvertingValuesAsync(currency)});
+  }
+
   _handleBuyInputChanges(String v) {
-    print(v);
+    _debounceConvertCurrencies(v);
   }
 
   _handleSellInputChanges(String v) {
-    print(v);
+    _debounceConvertCurrencies(v);
   }
 
   @override

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:currency_alarm/services/storage.dart';
+import 'package:currency_alarm/services/api.dart';
+import 'package:currency_alarm/libs/debouncer.dart';
 
 class DashboardView extends StatefulWidget {
   @override
@@ -8,6 +10,23 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  void _fetchRates() async {
+    var response = await CurrencyApi.fetchRate();
+
+    print(response.body);
+  }
+
+  void _fetchInitialRates() {
+    Future.delayed(Duration.zero, _fetchRates);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _fetchInitialRates();
+  }
+
   Future<void> _showTrackingRateDialog() async {
     return showDialog<void>(
         context: context,
