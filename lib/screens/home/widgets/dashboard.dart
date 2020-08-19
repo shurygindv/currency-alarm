@@ -11,9 +11,9 @@ class DashboardView extends StatefulWidget {
 
 class _DashboardViewState extends State<DashboardView> {
   void _fetchRates() async {
-    var response = await CurrencyApi.fetchRate();
-
-    print(response.body);
+    final currencyInfo = await CurrencyApi.fetchRate();
+    final ss = currencyInfo.getUSDRateIn('RUB');
+    print(ss + 1);
   }
 
   void _fetchInitialRates() {
