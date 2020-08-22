@@ -9,6 +9,9 @@ class Application extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: _title, home: HomePageWidget());
+    return MaterialApp(
+        title: _title,
+        theme: ThemeData(fontFamily: 'Rubik'),
+        home: HomePageWidget());
   }
 }
