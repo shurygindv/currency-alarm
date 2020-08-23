@@ -114,22 +114,38 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   Widget _buildCurrentCurrencyRate() => Container(
-          child: Row(
+      margin: EdgeInsets.only(top: 30, bottom: 20),
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            padding: EdgeInsets.only(right: 10),
-            margin: EdgeInsets.symmetric(vertical: 30),
-            child: Text(
-              '74.57',
-              style: TextStyle(fontSize: 47, fontWeight: FontWeight.w500),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.only(right: 10),
+                child: Text(
+                  '74.57',
+                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500),
+                ),
+              ),
+              SvgPicture.asset(
+                'lib/assets/img/euro-sign.svg',
+                alignment: Alignment.topCenter,
+                height: 30.0,
+                width: 30.0,
+              ),
+            ],
           ),
-          SvgPicture.asset(
-            'lib/assets/img/euro-sign.svg',
-            alignment: Alignment.topCenter,
-            height: 30.0,
-            width: 30.0,
+          Column(
+            children: [
+              Container(
+                child: Text(
+                  'last updated on 20 August 20:22',
+                  style: TextStyle(fontSize: 12, color: Colors.black54),
+                ),
+              )
+            ],
           )
         ],
       ));
