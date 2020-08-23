@@ -4,6 +4,9 @@ import 'package:currency_alarm/services/storage.dart';
 import 'package:currency_alarm/services/api.dart';
 import 'package:currency_alarm/libs/debouncer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import 'package:currency_alarm/application.dart';
 
 class DashboardView extends StatefulWidget {
   @override
@@ -11,6 +14,30 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  bool _isRateExchangeFetching = false;
+
+  void _fetchInitialRates() {
+    // Ы
+    Future.microtask(() async {
+      setState(() {
+        _isRateExchangeFetching = true;
+      });
+
+      await GlobalStore.getProvider(context).fetchRates();
+
+      setState(() {
+        _isRateExchangeFetching = false;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _fetchInitialRates();
+  }
+
   Future<void> _showAddingAlarmDialog() async {
     return showDialog<void>(
         context: context,
@@ -133,9 +160,19 @@ class _DashboardViewState extends State<DashboardView> {
         ],
       ));
 
+  Widget _buildLoader() => Container(
+        margin: EdgeInsets.only(top: 33, bottom: 30),
+        child: SpinKitRipple(
+          color: Colors.black38,
+          size: 60.0,
+        ),
+      );
+
   _buildCurrencyTracker() => Column(
         children: [
-          _buildCurrentCurrencyRate(),
+          _isRateExchangeFetching
+              ? _buildLoader()
+              : _buildCurrentCurrencyRate(),
           _buildCurrencyIndicator(),
         ],
       );

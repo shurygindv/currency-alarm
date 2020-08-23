@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import './widgets/currency-converter.dart';
 import './widgets/dashboard.dart';
 
-import 'package:currency_alarm/application.dart';
-
 class HomePageWidget extends StatefulWidget {
   HomePageWidget({Key key}) : super(key: key);
 
@@ -19,17 +17,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     DashboardView(),
     CurrencyConverter(),
   ];
-
-  void _fetchInitialRates() {
-    Future.microtask(() => GlobalStore.getProvider(context).fetchRates());
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _fetchInitialRates();
-  }
 
   _onItemTapped(int index) {
     setState(() => {_selectedIndex = index});
