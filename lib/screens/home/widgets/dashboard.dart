@@ -28,8 +28,7 @@ class _DashboardViewState extends State<DashboardView> {
     _fetchInitialRates();
   }
 
-  /*
-  Future<void> _showTrackingRateDialog() async {
+  Future<void> _showAddingAlarmDialog() async {
     return showDialog<void>(
         context: context,
         barrierDismissible: false,
@@ -47,22 +46,6 @@ class _DashboardViewState extends State<DashboardView> {
               ],
             ));
   }
- 
-
-  Widget _buildTrackingRateButton() {
-    return RaisedButton(
-      onPressed: () {
-        _showTrackingRateDialog();
-      },
-      color: Color(0xffe8b96a),
-      textColor: Colors.white,
-      child: Text(
-        "Tap here to track downgrade of rate",
-        style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-  */
 
   Widget _buildCurrencyIndicator() {
     return Row(
@@ -118,10 +101,7 @@ class _DashboardViewState extends State<DashboardView> {
             margin: EdgeInsets.symmetric(vertical: 30),
             child: Text(
               '74.57',
-              style: TextStyle(
-                  fontSize: 47,
-                  fontFamily: 'Rubik',
-                  fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 47, fontWeight: FontWeight.w500),
             ),
           ),
           SvgPicture.asset(
@@ -133,16 +113,49 @@ class _DashboardViewState extends State<DashboardView> {
         ],
       ));
 
-  _buildCurrencyTracker() {
-    return Column(
-      children: [
-        _buildCurrentCurrencyRate(),
-        _buildCurrencyIndicator(),
-      ],
-    );
-  }
+  _buildCurrencyTracker() => Column(
+        children: [
+          _buildCurrentCurrencyRate(),
+          _buildCurrencyIndicator(),
+        ],
+      );
 
-  Widget _buildAlarmListSection() {}
+  Widget _buildAlarmListSection() => Column(children: [
+        Container(
+            margin: EdgeInsets.only(top: 40, bottom: 25),
+            child: Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: 5),
+                  child: Icon(Icons.access_time),
+                ),
+                Text('Active alarms'.toUpperCase(),
+                    style:
+                        TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
+              ],
+            )),
+        Center(
+          child: RaisedButton(
+            color: Colors.amber[400],
+            textColor: Colors.black54,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                    height: 65,
+                    margin: EdgeInsets.only(right: 10),
+                    child: Icon(Icons.add, size: 26)),
+                Text("Add currency alarm", style: TextStyle(fontSize: 16))
+              ],
+            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            onPressed: () {
+              _showAddingAlarmDialog();
+            },
+          ),
+        )
+      ]);
 
   @override
   Widget build(BuildContext context) {
@@ -151,15 +164,7 @@ class _DashboardViewState extends State<DashboardView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildCurrencyTracker(),
-            Container(
-              margin: EdgeInsets.only(top: 35),
-              child: Text('Active alarms'.toUpperCase(),
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            ),
-            Text('Alarms not found', style: TextStyle(fontSize: 20)),
-          ],
+          children: [_buildCurrencyTracker(), _buildAlarmListSection()],
         ));
   }
 }
