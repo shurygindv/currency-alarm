@@ -62,10 +62,10 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.only(top: 20),
       child: Column(children: [
         Container(
-          margin: EdgeInsets.only(bottom: 20),
+          margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
           child: TextField(
             keyboardType: TextInputType.number,
             onChanged: _handleBuyInputChanges,
@@ -76,6 +76,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
           ),
         ),
         Container(
+          margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
           child: TextField(
             keyboardType: TextInputType.number,
             onChanged: _handleSellInputChanges,
@@ -92,7 +93,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
               'Buy currency',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
             ),
-            Row(mainAxisSize: MainAxisSize.min, children: [
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Expanded(
                   child: RadioListTile(
                 title: const Text('USD'),

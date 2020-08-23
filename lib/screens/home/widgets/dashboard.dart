@@ -33,12 +33,33 @@ class _DashboardViewState extends State<DashboardView> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => AlertDialog(
-              title: Text('Title'),
-              content:
-                  SingleChildScrollView(child: Text("dollar ruble euro here")),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              content: SingleChildScrollView(
+                  child: Container(
+                      child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.remove, size: 30),
+                    onPressed: () {},
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    child: Text('76.6', style: TextStyle(fontSize: 25)),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add, size: 30),
+                    onPressed: () {},
+                  )
+                ],
+              ))
+                  //=
+                  ),
               actions: <Widget>[
                 FlatButton(
-                  child: Text('Ok'),
+                  child: Text('Notify me'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -127,7 +148,7 @@ class _DashboardViewState extends State<DashboardView> {
               children: [
                 Container(
                   margin: EdgeInsets.only(right: 5),
-                  child: Icon(Icons.access_time),
+                  child: Icon(Icons.access_time, size: 27),
                 ),
                 Text('Active alarms'.toUpperCase(),
                     style:
