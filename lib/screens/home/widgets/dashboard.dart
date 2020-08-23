@@ -11,23 +11,6 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
-  void _fetchRates() async {
-    final currencyInfo = await CurrencyApi.fetchRate();
-    final ss = currencyInfo.getUSDRateIn('RUB');
-    print(ss + 1);
-  }
-
-  void _fetchInitialRates() {
-    Future.delayed(Duration.zero, _fetchRates);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _fetchInitialRates();
-  }
-
   Future<void> _showAddingAlarmDialog() async {
     return showDialog<void>(
         context: context,
