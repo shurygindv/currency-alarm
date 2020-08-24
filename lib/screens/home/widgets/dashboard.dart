@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:currency_alarm/services/storage.dart';
 import 'package:currency_alarm/services/api.dart';
@@ -14,7 +15,7 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
-  bool _isRateExchangeFetching = false;
+  bool _isRateExchangeFetching = true;
 
   void _fetchInitialRates() {
     // Ы
@@ -123,42 +124,46 @@ class _DashboardViewState extends State<DashboardView> {
     );
   }
 
-  Widget _buildCurrentCurrencyRate() => Container(
-      margin: EdgeInsets.only(top: 30, bottom: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.only(right: 10),
-                child: Text(
-                  '74.57',
-                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500),
+  Widget _buildCurrentCurrencyRate() {
+    final updateTime = context.watch<GlobalStore>().updateTime;
+
+    return Container(
+        margin: EdgeInsets.only(top: 30, bottom: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Text(
+                    '74.57',
+                    style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500),
+                  ),
                 ),
-              ),
-              SvgPicture.asset(
-                'lib/assets/img/euro-sign.svg',
-                alignment: Alignment.topCenter,
-                height: 30.0,
-                width: 30.0,
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              Container(
-                child: Text(
-                  'last updated on 20 August 20:22',
-                  style: TextStyle(fontSize: 12, color: Colors.black54),
+                SvgPicture.asset(
+                  'lib/assets/img/euro-sign.svg',
+                  alignment: Alignment.topCenter,
+                  height: 30.0,
+                  width: 30.0,
                 ),
-              )
-            ],
-          )
-        ],
-      ));
+              ],
+            ),
+            Column(
+              children: [
+                Container(
+                  child: Text(
+                    "last updated on $updateTime",
+                    style: TextStyle(fontSize: 12, color: Colors.black54),
+                  ),
+                )
+              ],
+            )
+          ],
+        ));
+  }
 
   Widget _buildLoader() => Container(
         margin: EdgeInsets.only(top: 33, bottom: 30),
