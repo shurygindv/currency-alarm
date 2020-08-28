@@ -5,8 +5,8 @@ import 'dart:convert';
 const rateurl =
     'https://ia500r2mmf.execute-api.eu-west-3.amazonaws.com/default/get-currency-rating';
 
-const converterOrigin = 'nzun06d9r4.execute-api.eu-west-3';
-const converterPath = '/default/convertCurrency';
+const converterOrigin = 't2ubj7wmd0.execute-api.eu-west-3.amazonaws.com';
+const converterPath = '/default/ConvertCurrencyApi';
 
 enum CurrencyType { USD, RUB, EUR }
 
@@ -61,12 +61,17 @@ CurrencyRateResult mapCurrencyRating(String body) {
 }
 
 class ConverterResult {
-  final double converted;
+  final double rate;
+  final String from;
+  final String to;
 
-  ConverterResult({this.converted});
+  ConverterResult({this.rate, this.to, this.from});
 
   factory ConverterResult.fromJson(Map<String, dynamic> data) =>
-      ConverterResult(converted: data['converted']);
+      ConverterResult(
+          rate: data['rate'] as double,
+          to: data['to'] as String,
+          from: data['from'] as String);
 }
 
 ConverterResult mapConverterValues(String body) {
@@ -77,10 +82,11 @@ ConverterResult mapConverterValues(String body) {
   return ConverterResult.fromJson(data);
 }
 
-Uri getConverterUri(CurrencyType from, CurrencyType to) {
-  final queryParameters = {
-    'from': from.toString(),
-    'to': to.toString(),
+Uri getConverterUri(double amount, CurrencyType from, CurrencyType to) {
+  Map<String, String> queryParameters = {
+    'amount': amount.toString(),
+    'from': describeEnum(from),
+    'to': describeEnum(to),
   };
 
   print(queryParameters);
@@ -95,10 +101,12 @@ class CurrencyApi {
     return compute(mapCurrencyRating, res.body);
   }
 
-  static Future<ConverterResult> convertRate(String currency,
-      {CurrencyType from, CurrencyType to}) async {
-    final res = await http.get(getConverterUri(from, to));
+  static Future<ConverterResult> convert(
+      double amount, CurrencyType from, CurrencyType to) async {
+    print(getConverterUri(amount, from, to));
+    final res = await http.get(getConverterUri(amount, from, to));
 
+    print(res.body);
     return compute(mapConverterValues, res.body);
   }
 }

@@ -38,17 +38,21 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
     );
   }
 
-  Future<void> _convertCurrency(String currency) async {
-    return await CurrencyApi.convertRate(currency,
-        from: _buyCurrencyType, to: _sellCurrencytype);
+  Future<ConverterResult> _convertCurrency(double amount) async {
+    return await CurrencyApi.convert(
+        amount, _buyCurrencyType, _sellCurrencytype);
   }
 
-  _updateConvertingValuesAsync(String currency) async {
-    var result = await _convertCurrency(currency);
+  _updateConvertingValuesAsync(double amount) async {
+    var result = await _convertCurrency(amount);
+
+    print(result.rate);
   }
 
   _debounceConvertCurrencies(String currency) {
-    _debouncer.run(() => {_updateConvertingValuesAsync(currency)});
+    final amount = double.parse(currency);
+
+    _debouncer.run(() => {_updateConvertingValuesAsync(amount)});
   }
 
   _handleBuyInputChanges(String v) {
