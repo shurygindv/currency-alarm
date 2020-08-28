@@ -7,6 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:currency_alarm/services/api.dart';
 import 'package:currency_alarm/libs/debouncer.dart';
 
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 final _debouncer = Debouncer(delay: Duration(milliseconds: 300));
 
 class CurrencyConverter extends StatefulWidget {
@@ -20,6 +22,9 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
 
   bool _isBuyEnabled = true;
   bool _isSellEnabled = true;
+
+  bool _isBuyFetching = false;
+  bool _isSellFetching = false;
 
   final buyInput = TextEditingController();
   final sellInput = TextEditingController();
@@ -129,24 +134,35 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
 
   _setBuyInputValue(String v) {
     buyInput.text = v;
-    buyInput.selection =
-        TextSelection.fromPosition(TextPosition(offset: buyInput.text.length));
   }
 
   _setSellInputValue(String v) {
     sellInput.text = v;
-    sellInput.selection =
-        TextSelection.fromPosition(TextPosition(offset: sellInput.text.length));
+  }
+
+  _toggleSellLoader() {
+    setState(() {
+      _isSellFetching = !_isSellFetching;
+    });
+  }
+
+  _toggleBuyLoader() {
+    setState(() {
+      _isBuyFetching = !_isBuyFetching;
+    });
   }
 
   _handleBuyInputChanges(String v) {
     _disableSellCurrencyInput();
 
+    _toggleSellLoader();
+
     _debounceConvertingBuyField(double.parse(v)).then((value) {
       _enableSellCurrencyInput();
-
+      _toggleSellLoader();
       _setSellInputValue(value.rate.toString());
     }).catchError((error) {
+      _toggleSellLoader();
       _enableSellCurrencyInput();
     });
   }
@@ -154,13 +170,26 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   _handleSellInputChanges(String v) {
     _disableBuyCurrencyInput();
 
+    _toggleBuyLoader();
     _debounceConvertingSellField(double.parse(v)).then((value) {
       _enableBuyCurrencyInput();
-
+      _toggleBuyLoader();
       _setBuyInputValue(value.rate.toString());
     }).catchError((error) {
+      _toggleBuyLoader();
       _enableBuyCurrencyInput();
     });
+  }
+
+  Widget _buildRingLoader() {
+    return Container(
+      width: 40,
+      child: SpinKitRing(
+        color: Colors.black38,
+        size: 20.0,
+        lineWidth: 2,
+      ),
+    );
   }
 
   @override
@@ -178,6 +207,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
             decoration: InputDecoration(
                 icon: _buildCurrencyIcon(_buyCurrencyType),
                 border: OutlineInputBorder(),
+                suffixIcon: _isBuyFetching ? _buildRingLoader() : null,
                 labelText: 'Buy (from)'),
           ),
         ),
@@ -191,6 +221,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
             decoration: InputDecoration(
                 icon: _buildCurrencyIcon(_sellCurrencytype),
                 border: OutlineInputBorder(),
+                suffixIcon: _isSellFetching ? _buildRingLoader() : null,
                 labelText: 'Sell (to)'),
           ),
         ),
