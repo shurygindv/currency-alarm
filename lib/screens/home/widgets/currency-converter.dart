@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,6 +17,20 @@ class CurrencyConverter extends StatefulWidget {
 class _CurrencyConverterState extends State<CurrencyConverter> {
   CurrencyType _buyCurrencyType = CurrencyType.USD;
   CurrencyType _sellCurrencytype = CurrencyType.USD;
+
+  bool _isBuyEnabled = true;
+  bool _isSellEnabled = true;
+
+  final buyInput = TextEditingController();
+  final sellInput = TextEditingController();
+
+  @override
+  void dispose() {
+    buyInput.dispose();
+    sellInput.dispose();
+
+    super.dispose();
+  }
 
   _buildCurrencyIcon(CurrencyType t) {
     var assetName = "";
@@ -38,29 +54,113 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
     );
   }
 
-  Future<ConverterResult> _convertCurrency(double amount) async {
-    return await CurrencyApi.convert(
-        amount, _buyCurrencyType, _sellCurrencytype);
+  Future<ConverterResult> _convertCurrency(double amount,
+      {CurrencyType buy, CurrencyType sell}) async {
+    return await CurrencyApi.convert(amount, buy, sell);
   }
 
-  _updateConvertingValuesAsync(double amount) async {
-    var result = await _convertCurrency(amount);
+  Future<ConverterResult> _fetchBuy(double amount) async {
+    var result = await _convertCurrency(amount,
+        buy: _buyCurrencyType, sell: _sellCurrencytype);
 
     print(result.rate);
+
+    return result;
   }
 
-  _debounceConvertCurrencies(String currency) {
-    final amount = double.parse(currency);
+  Future<ConverterResult> _debounceConvertingBuyField(double amount) {
+    final completer = new Completer<ConverterResult>();
 
-    _debouncer.run(() => {_updateConvertingValuesAsync(amount)});
+    _debouncer.run(() async {
+      final result = await _fetchBuy(amount);
+
+      completer.complete(result);
+    });
+
+    return completer.future;
+  }
+
+  // ==
+
+  Future<ConverterResult> _fetchSell(double amount) async {
+    var result = await _convertCurrency(amount,
+        buy: _sellCurrencytype, sell: _buyCurrencyType);
+
+    print(result.rate);
+
+    return result;
+  }
+
+  Future<ConverterResult> _debounceConvertingSellField(double amount) {
+    final completer = new Completer<ConverterResult>();
+
+    _debouncer.run(() async {
+      final result = await _fetchSell(amount);
+
+      completer.complete(result);
+    });
+
+    return completer.future;
+  }
+
+  _disableSellCurrencyInput() {
+    setState(() {
+      _isSellEnabled = false;
+    });
+  }
+
+  _enableSellCurrencyInput() {
+    setState(() {
+      _isSellEnabled = true;
+    });
+  }
+
+  _disableBuyCurrencyInput() {
+    setState(() {
+      _isBuyEnabled = false;
+    });
+  }
+
+  _enableBuyCurrencyInput() {
+    setState(() {
+      _isBuyEnabled = true;
+    });
+  }
+
+  _setBuyInputValue(String v) {
+    buyInput.text = v;
+    buyInput.selection =
+        TextSelection.fromPosition(TextPosition(offset: buyInput.text.length));
+  }
+
+  _setSellInputValue(String v) {
+    sellInput.text = v;
+    sellInput.selection =
+        TextSelection.fromPosition(TextPosition(offset: sellInput.text.length));
   }
 
   _handleBuyInputChanges(String v) {
-    _debounceConvertCurrencies(v);
+    _disableSellCurrencyInput();
+
+    _debounceConvertingBuyField(double.parse(v)).then((value) {
+      _enableSellCurrencyInput();
+
+      _setSellInputValue(value.rate.toString());
+    }).catchError((error) {
+      _enableSellCurrencyInput();
+    });
   }
 
   _handleSellInputChanges(String v) {
-    _debounceConvertCurrencies(v);
+    _disableBuyCurrencyInput();
+
+    _debounceConvertingSellField(double.parse(v)).then((value) {
+      _enableBuyCurrencyInput();
+
+      _setBuyInputValue(value.rate.toString());
+    }).catchError((error) {
+      _enableBuyCurrencyInput();
+    });
   }
 
   @override
@@ -71,6 +171,8 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
         Container(
           margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
           child: TextField(
+            controller: buyInput,
+            enabled: _isBuyEnabled,
             keyboardType: TextInputType.number,
             onChanged: _handleBuyInputChanges,
             decoration: InputDecoration(
@@ -82,6 +184,8 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
         Container(
           margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
           child: TextField(
+            controller: sellInput,
+            enabled: _isSellEnabled,
             keyboardType: TextInputType.number,
             onChanged: _handleSellInputChanges,
             decoration: InputDecoration(

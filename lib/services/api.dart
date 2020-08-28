@@ -67,11 +67,12 @@ class ConverterResult {
 
   ConverterResult({this.rate, this.to, this.from});
 
-  factory ConverterResult.fromJson(Map<String, dynamic> data) =>
-      ConverterResult(
-          rate: data['rate'] as double,
-          to: data['to'] as String,
-          from: data['from'] as String);
+  factory ConverterResult.fromJson(Map<String, dynamic> data) {
+    double rate = data['rate'] + .0;
+
+    return ConverterResult(
+        rate: rate, to: data['to'] as String, from: data['from'] as String);
+  }
 }
 
 ConverterResult mapConverterValues(String body) {
