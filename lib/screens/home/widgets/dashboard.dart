@@ -17,6 +17,9 @@ class DashboardView extends StatefulWidget {
 class _DashboardViewState extends State<DashboardView> {
   bool _isRateExchangeFetching = true;
 
+  String _leftDropdownValue = 'USD';
+  String _rightDropdownValue = 'USD';
+
   void _fetchInitialRates() {
     // Ы
     Future.microtask(() async {
@@ -26,9 +29,11 @@ class _DashboardViewState extends State<DashboardView> {
 
       await GlobalStore.getProvider(context).fetchRates();
 
-      setState(() {
-        _isRateExchangeFetching = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isRateExchangeFetching = false;
+        });
+      }
     });
   }
 
@@ -79,47 +84,67 @@ class _DashboardViewState extends State<DashboardView> {
             ));
   }
 
+  _buildUSFlag() {
+    return Container(
+      width: 40,
+      height: 45,
+      child: ClipRRect(
+          borderRadius: BorderRadius.circular(16.0),
+          child: SvgPicture.asset(
+            'lib/assets/img/us-flag.svg',
+            fit: BoxFit.cover,
+          )),
+    );
+  }
+
+  Widget _buildLeftDropdown() {
+    return Flexible(
+        fit: FlexFit.loose,
+        child: DropdownButton(
+          value: _leftDropdownValue,
+          elevation: 16,
+          isDense: true,
+          iconSize: 0.0,
+          isExpanded: true,
+          onChanged: (v) {
+            setState(() {
+              _leftDropdownValue = v;
+            });
+          },
+          selectedItemBuilder: (BuildContext context) {
+            return <String>['RUB', "EUR", "USD"].map<Widget>((String item) {
+              if (item == 'USD') {
+                return Row(
+                  children: [
+                    _buildUSFlag(),
+                    Container(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: Text(
+                          "1 USD",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.grey[500],
+                              fontWeight: FontWeight.bold),
+                        )),
+                  ],
+                );
+              }
+
+              return Text(item);
+            }).toList();
+          },
+          items: <String>['RUB', "EUR", "USD"]
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem(value: value, child: Text(value));
+          }).toList(),
+        ));
+  }
+
   Widget _buildCurrencyIndicator() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          width: 40,
-          height: 45,
-          child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: SvgPicture.asset(
-                'lib/assets/img/us-flag.svg',
-                fit: BoxFit.cover,
-              )),
-        ),
-        Container(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: Text(
-              "1 USD",
-              style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey[500],
-                  fontWeight: FontWeight.bold),
-            )),
-        Container(
-          child: Icon(Icons.trending_flat, size: 27.0),
-          padding: EdgeInsets.all(7),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50), color: Colors.grey[200]),
-        ),
-        Container(
-            padding: EdgeInsets.only(left: 20, right: 20), child: Text("EUR")),
-        Container(
-          width: 40,
-          height: 45,
-          child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: SvgPicture.asset(
-                'lib/assets/img/eur-union-flag.svg',
-                fit: BoxFit.cover,
-              )),
-        ),
+        _buildLeftDropdown(),
       ],
     );
   }
