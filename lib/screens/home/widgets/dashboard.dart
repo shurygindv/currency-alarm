@@ -9,6 +9,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:currency_alarm/application.dart';
 
+import 'dashboard/currency_switcher_control.dart';
+
 class DashboardView extends StatefulWidget {
   @override
   _DashboardViewState createState() => _DashboardViewState();
@@ -16,9 +18,6 @@ class DashboardView extends StatefulWidget {
 
 class _DashboardViewState extends State<DashboardView> {
   bool _isRateExchangeFetching = true;
-
-  String _leftDropdownValue = 'USD';
-  String _rightDropdownValue = 'USD';
 
   void _fetchInitialRates() {
     // Ы
@@ -84,71 +83,6 @@ class _DashboardViewState extends State<DashboardView> {
             ));
   }
 
-  _buildUSFlag() {
-    return Container(
-      width: 40,
-      height: 45,
-      child: ClipRRect(
-          borderRadius: BorderRadius.circular(16.0),
-          child: SvgPicture.asset(
-            'lib/assets/img/us-flag.svg',
-            fit: BoxFit.cover,
-          )),
-    );
-  }
-
-  Widget _buildLeftDropdown() {
-    return Flexible(
-        fit: FlexFit.loose,
-        child: DropdownButton(
-          value: _leftDropdownValue,
-          elevation: 16,
-          isDense: true,
-          iconSize: 0.0,
-          isExpanded: true,
-          onChanged: (v) {
-            setState(() {
-              _leftDropdownValue = v;
-            });
-          },
-          selectedItemBuilder: (BuildContext context) {
-            return <String>['RUB', "EUR", "USD"].map<Widget>((String item) {
-              if (item == 'USD') {
-                return Row(
-                  children: [
-                    _buildUSFlag(),
-                    Container(
-                        padding: EdgeInsets.only(left: 20, right: 20),
-                        child: Text(
-                          "1 USD",
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.grey[500],
-                              fontWeight: FontWeight.bold),
-                        )),
-                  ],
-                );
-              }
-
-              return Text(item);
-            }).toList();
-          },
-          items: <String>['RUB', "EUR", "USD"]
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem(value: value, child: Text(value));
-          }).toList(),
-        ));
-  }
-
-  Widget _buildCurrencyIndicator() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildLeftDropdown(),
-      ],
-    );
-  }
-
   Widget _buildCurrentCurrencyRate() {
     final updateTime = context.watch<GlobalStore>().updateTime;
 
@@ -203,7 +137,7 @@ class _DashboardViewState extends State<DashboardView> {
           _isRateExchangeFetching
               ? _buildLoader()
               : _buildCurrentCurrencyRate(),
-          _buildCurrencyIndicator(),
+          CurrencySwitcherControl(),
         ],
       );
 
