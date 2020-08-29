@@ -1,12 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:currency_alarm/widgets/flag_icon.dart';
+import 'package:currency_alarm/widgets/currency_pluralizer.dart';
+import 'package:currency_alarm/widgets/currency_text.dart';
 
-class CurrencyDropdownButton extends StatelessWidget {
+class CurrencyDropdown extends StatefulWidget {
+  String value = 'usd';
+  bool backward = false;
+
+  CurrencyDropdown({this.value, this.backward = false});
+
+  @override
+  _CurrencyDropdownState createState() =>
+      _CurrencyDropdownState(value: value, backward: backward);
+}
+
+class _CurrencyDropdownState extends State<CurrencyDropdown> {
+  String value;
+  bool backward = false;
+
+  _CurrencyDropdownState({this.value, this.backward = false});
+
+  final List<DropdownMenuItem> _menuItems = [
+    DropdownMenuItem(value: 'usd', child: CurrencyText(name: 'usd')),
+    DropdownMenuItem(value: 'eur', child: CurrencyText(name: 'eur')),
+    DropdownMenuItem(value: 'rub', child: CurrencyText(name: 'rub')),
+  ];
+
+  Widget _buildFlag(String flagName) => Container(
+        width: 40,
+        height: 45,
+        child: FlagIcon(name: flagName),
+      );
+
+  Widget _buildFlagLabel(String name) => Container(
+      padding: EdgeInsets.only(left: 20, right: 20),
+      child: CurrencyPluralizer(amount: 1, name: name));
+
+  Widget _buildSelectedItem() =>
+      Row(children: [_buildFlag(value), _buildFlagLabel(value)]);
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Flexible(
+        fit: FlexFit.loose,
+        child: DropdownButton(
+          value: value,
+          elevation: 16,
+          isDense: true,
+          icon: backward ? _buildFlag(value) : null,
+          iconSize: backward ? 24.0 : 0.0,
+          isExpanded: true,
+          onChanged: (v) {
+            setState(() {
+              value = v;
+            });
+          },
+          items: _menuItems,
+          selectedItemBuilder: backward
+              ? null
+              : (BuildContext ctx) => [
+                    _buildSelectedItem(),
+                    _buildSelectedItem(),
+                    _buildSelectedItem(),
+                  ],
+        ));
   }
 }
 
@@ -17,68 +76,21 @@ class CurrencySwitcherControl extends StatefulWidget {
 }
 
 class _CurrencySwitcherControlState extends State<CurrencySwitcherControl> {
-  String _leftDropdownValue = 'USD';
-  String _rightDropdownValue = 'USD';
+  Widget _buildLeftDropdown() => CurrencyDropdown(
+        value: 'usd',
+      );
 
-  _buildUSFlag() {
-    return Container(
-      width: 40,
-      height: 45,
-      child: ClipRRect(
-          borderRadius: BorderRadius.circular(16.0),
-          child: SvgPicture.asset(
-            'lib/assets/img/us-flag.svg',
-            fit: BoxFit.cover,
-          )),
-    );
-  }
+  Widget _buildRightDropdown() =>
+      CurrencyDropdown(value: 'eur', backward: true);
 
-  Widget _buildLeftDropdown() {
-    return Flexible(
-        fit: FlexFit.loose,
-        child: DropdownButton(
-          value: _leftDropdownValue,
-          elevation: 16,
-          isDense: true,
-          iconSize: 0.0,
-          isExpanded: true,
-          onChanged: (v) {
-            setState(() {
-              _leftDropdownValue = v;
-            });
-          },
-          selectedItemBuilder: (BuildContext context) {
-            return <String>['RUB', "EUR", "USD"].map<Widget>((String item) {
-              if (item == 'USD') {
-                return Row(
-                  children: [
-                    _buildUSFlag(),
-                    Container(
-                        padding: EdgeInsets.only(left: 20, right: 20),
-                        child: Text(
-                          "1 USD",
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.grey[500],
-                              fontWeight: FontWeight.bold),
-                        )),
-                  ],
-                );
-              }
-
-              return Text(item);
-            }).toList();
-          },
-          items: <String>['RUB', "EUR", "USD"]
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem(value: value, child: Text(value));
-          }).toList(),
-        ));
-  }
-
-  Widget _buildRightDropdown() {
-    return Container(); //
-  }
+  Widget _buildDirectionWidget() => Flexible(
+          child: Container(
+        child: Icon(Icons.trending_flat, size: 27.0),
+        padding: EdgeInsets.all(7),
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50), color: Colors.grey[200]),
+      ));
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +98,7 @@ class _CurrencySwitcherControlState extends State<CurrencySwitcherControl> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildLeftDropdown(),
+        _buildDirectionWidget(),
         _buildRightDropdown(),
       ],
     );
