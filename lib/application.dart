@@ -3,25 +3,51 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-import 'package:currency_alarm/screens/main/main.dart';
-import 'package:currency_alarm/services/api.dart';
+import 'package:get_it/get_it.dart';
 
+import 'package:currency_alarm/screens/main/main.dart';
+
+import 'package:currency_alarm/features/exporter.dart'
+    show
+        CurrencyRateResult,
+        CurrencyRateService,
+        ConverterResult,
+        CurrencyConverterService,
+        CurrencyType;
+
+// todo: rework
 class AppStore extends ChangeNotifier {
   static AppStore getProvider(ctx) => Provider.of<AppStore>(ctx, listen: false);
 
-  CurrencyRateResult _rateResult;
+  CurrencyRateResult _rateResult = CurrencyRateResult();
 
   DateTime get timestamp => DateTime.parse(_rateResult.updateTime);
   String get updateTime => DateFormat("d MMMM, hh:mm a").format(timestamp);
 
+  CurrencyRateService _getRateService() =>
+      GetIt.instance.get<CurrencyRateService>();
+
+  CurrencyConverterService _getConverterService() =>
+      GetIt.instance.get<CurrencyConverterService>();
+
   Future<CurrencyRateResult> _fetchCurrencyRates() {
-    return CurrencyApi.fetchRate();
+    return _getRateService().fetchRate();
+  }
+
+  Future<ConverterResult> _convert(double amount,
+      {CurrencyType buy, CurrencyType sell}) {
+    return _getConverterService().convert(amount, buy, sell);
   }
 
   Future<void> fetchRates() async {
     _rateResult = await _fetchCurrencyRates();
 
     notifyListeners();
+  }
+
+  Future<ConverterResult> convertCurrency(double amount,
+      {CurrencyType buy, CurrencyType sell}) async {
+    return _convert(amount, buy: buy, sell: sell);
   }
 }
 

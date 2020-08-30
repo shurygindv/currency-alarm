@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './widgets/currency_broadcast.dart';
-import './widgets/active_currency_alarms.dart';
+import '../widgets/currency_broadcast.dart' show CurrencyBroadcast;
+import '../widgets/active_currency_alarms.dart' show ActiveCurrencyAlarms;
 
 class DashboardView extends StatefulWidget {
   @override

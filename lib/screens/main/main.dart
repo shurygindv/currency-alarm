@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:currency_alarm/widgets/caption.dart';
-import 'package:currency_alarm/views/dashboard/dashboard.dart';
-import 'package:currency_alarm/views/currency_converter/currency_converter.dart';
+import 'package:currency_alarm/ui/exporter.dart' show Caption;
+
+import 'package:currency_alarm/features/exporter.dart'
+    show DashboardView, CurrencyConverter;
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key key}) : super(key: key);

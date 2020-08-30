@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:currency_alarm/widgets/flag_icon.dart';
-import 'package:currency_alarm/widgets/currency_pluralizer.dart';
-import 'package:currency_alarm/widgets/currency_text.dart';
+import 'package:currency_alarm/ui/exporter.dart' show FlagIcon;
+
+import './currency_pluralizer.dart' show CurrencyPluralizer;
+import './currency_text.dart' show CurrencyText;
 
 class CurrencyDropdown extends StatefulWidget {
   String value = 'usd';

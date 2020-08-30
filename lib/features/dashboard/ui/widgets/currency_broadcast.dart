@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'package:currency_alarm/widgets/loader.dart';
-import 'package:currency_alarm/widgets/currency_switcher_control.dart';
-import 'package:currency_alarm/services/storage.dart';
-import 'package:currency_alarm/services/api.dart';
-import 'package:currency_alarm/libs/debouncer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:currency_alarm/application.dart';
+import 'package:currency_alarm/ui/exporter.dart' show Loader;
+import 'package:currency_alarm/application.dart' show AppStore;
+
+import './currency_switcher_control.dart' show CurrencySwitcherControl;
 
 class CurrencyBroadcast extends StatefulWidget {
   @override

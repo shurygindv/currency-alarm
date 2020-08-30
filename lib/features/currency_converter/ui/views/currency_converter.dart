@@ -1,13 +1,16 @@
 import 'dart:async';
-
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:currency_alarm/services/api.dart';
 import 'package:currency_alarm/libs/debouncer.dart';
+import 'package:currency_alarm/application.dart' show AppStore;
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../../data/models.dart' show ConverterResult;
+import '../../../common/types.dart' show CurrencyType;
 
 final _debouncer = Debouncer(delay: Duration(milliseconds: 300));
 
@@ -61,7 +64,10 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
 
   Future<ConverterResult> _convertCurrency(double amount,
       {CurrencyType buy, CurrencyType sell}) async {
-    return await CurrencyApi.convert(amount, buy, sell);
+    return context
+        .read<AppStore>()
+        .convertCurrency(amount, buy: buy, sell: sell);
+    // return await CurrencyApi.convert(amount, buy, sell);
   }
 
   Future<ConverterResult> _fetchBuy(double amount) async {
