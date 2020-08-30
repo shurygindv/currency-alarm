@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'package:currency_alarm/widgets/flag_icon.dart';
 import 'package:currency_alarm/widgets/currency_pluralizer.dart';

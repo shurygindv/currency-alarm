@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'package:currency_alarm/widgets/caption.dart';
+import 'package:currency_alarm/views/dashboard/dashboard.dart';
+import 'package:currency_alarm/views/currency_converter/currency_converter.dart';
 
-import './widgets/currency-converter.dart';
-import './widgets/dashboard.dart';
-
-class HomePageWidget extends StatefulWidget {
-  HomePageWidget({Key key}) : super(key: key);
+class MainScreen extends StatefulWidget {
+  MainScreen({Key key}) : super(key: key);
 
   @override
-  _HomePageWidgetState createState() => _HomePageWidgetState();
+  _MainScreenState createState() => _MainScreenState();
 }
 
-class _HomePageWidgetState extends State<HomePageWidget> {
+class _MainScreenState extends State<MainScreen> {
   int _selectedPanelIndex = 0;
 
   final List<Widget> _widgetViews = <Widget>[
@@ -26,12 +25,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       elevation: 0.0,
       backgroundColor: Colors.transparent);
 
-  final bottomNavbarItems = const <BottomNavigationBarItem>[
-    BottomNavigationBarItem(
-        icon: Icon(Icons.dashboard), title: Text('Dashboard')),
-    BottomNavigationBarItem(
-        icon: Icon(Icons.assessment), title: Text('Converter'))
-  ];
+  final dashboardNavItem = BottomNavigationBarItem(
+      icon: Icon(Icons.dashboard), title: Text('Dashboard'));
+
+  final converterNavItem = BottomNavigationBarItem(
+      icon: Icon(Icons.assessment), title: Text('Converter'));
 
   void _onItemTapped(int index) {
     setState(() => {_selectedPanelIndex = index});
@@ -39,17 +37,21 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   Widget _buildHeader() => appBar;
 
-  Widget _buildBody() => Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
-      child: ClipRRect(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-          child: Container(
-            child: Center(child: _widgetViews.elementAt(_selectedPanelIndex)),
-            color: Colors.white,
-          )));
+  Widget _buildBody() {
+    final currentView = _widgetViews.elementAt(_selectedPanelIndex);
+
+    return Container(
+        margin: EdgeInsets.only(left: 10, right: 10),
+        child: ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+            child: Container(
+              child: Center(child: currentView),
+              color: Colors.white,
+            )));
+  }
 
   _buildBottomNavbar() => BottomNavigationBar(
-        items: bottomNavbarItems,
+        items: [dashboardNavItem, converterNavItem],
         selectedItemColor: Color(0xffdc9a2a),
         currentIndex: _selectedPanelIndex,
         onTap: _onItemTapped,

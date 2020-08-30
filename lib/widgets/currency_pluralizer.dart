@@ -7,7 +7,7 @@ class CurrencyPluralizer extends StatelessWidget {
   final int amount;
   final String name;
 
-  CurrencyPluralizer({this.amount, this.name});
+  const CurrencyPluralizer({this.amount, this.name});
 
   @override
   Widget build(BuildContext context) {

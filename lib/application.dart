@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-import 'package:currency_alarm/screens/home/home.dart';
+import 'package:currency_alarm/screens/main/main.dart';
 import 'package:currency_alarm/services/api.dart';
 
-class GlobalStore extends ChangeNotifier {
-  static GlobalStore getProvider(context) =>
-      Provider.of<GlobalStore>(context, listen: false);
+class AppStore extends ChangeNotifier {
+  static AppStore getProvider(ctx) => Provider.of<AppStore>(ctx, listen: false);
 
   CurrencyRateResult _rateResult;
 
@@ -29,16 +28,14 @@ class GlobalStore extends ChangeNotifier {
 class Application extends StatelessWidget {
   static const String _title = 'currency alarm';
 
-  Widget _buildUi() => MaterialApp(
-      title: _title,
-      theme: ThemeData(fontFamily: 'Rubik'),
-      home: HomePageWidget());
+  Widget _buildApp() => MaterialApp(
+      title: _title, theme: ThemeData(fontFamily: 'Rubik'), home: MainScreen());
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => GlobalStore(),
-      child: _buildUi(),
+      create: (_) => AppStore(),
+      child: _buildApp(),
     );
   }
 }
