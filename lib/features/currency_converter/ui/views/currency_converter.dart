@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:currency_alarm/libs/debouncer.dart';
 import 'package:currency_alarm/application.dart' show AppStore;
@@ -11,6 +10,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../data/models.dart' show ConverterResult;
 import '../../../common/types.dart' show CurrencyType;
+
+import '../widgets/currency_sign_icon.dart' show CurrencySignIcon;
 
 final _debouncer = Debouncer(delay: Duration(milliseconds: 300));
 
@@ -38,28 +39,6 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
     sellInput.dispose();
 
     super.dispose();
-  }
-
-  _buildCurrencyIcon(CurrencyType t) {
-    var assetName = "";
-
-    if (t == CurrencyType.USD) {
-      assetName = 'lib/assets/img/dollar-sign.svg';
-    }
-
-    if (t == CurrencyType.EUR) {
-      assetName = 'lib/assets/img/euro-sign.svg';
-    }
-
-    if (t == CurrencyType.RUB) {
-      assetName = 'lib/assets/img/ruble-sign.svg';
-    }
-
-    return SvgPicture.asset(
-      assetName,
-      height: 20.0,
-      width: 20.0,
-    );
   }
 
   Future<ConverterResult> _convertCurrency(double amount,
@@ -211,7 +190,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
             keyboardType: TextInputType.number,
             onChanged: _handleBuyInputChanges,
             decoration: InputDecoration(
-                icon: _buildCurrencyIcon(_buyCurrencyType),
+                icon: CurrencySignIcon(name: _buyCurrencyType),
                 border: OutlineInputBorder(),
                 suffixIcon: _isBuyFetching ? _buildRingLoader() : null,
                 labelText: 'Buy (from)'),
@@ -225,7 +204,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
             keyboardType: TextInputType.number,
             onChanged: _handleSellInputChanges,
             decoration: InputDecoration(
-                icon: _buildCurrencyIcon(_sellCurrencytype),
+                icon: CurrencySignIcon(name: _sellCurrencytype),
                 border: OutlineInputBorder(),
                 suffixIcon: _isSellFetching ? _buildRingLoader() : null,
                 labelText: 'Sell (to)'),

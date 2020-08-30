@@ -6,7 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class Loader extends StatelessWidget {
   final String name;
 
-  const Loader({this.name});
+  const Loader({@required this.name});
 
   @override
   Widget build(BuildContext context) {

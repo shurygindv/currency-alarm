@@ -11,7 +11,7 @@ Map<String, String> assetFlags = {
 class FlagIcon extends StatelessWidget {
   final String name;
 
-  const FlagIcon({this.name});
+  const FlagIcon({@required this.name});
 
   @override
   Widget build(BuildContext context) {

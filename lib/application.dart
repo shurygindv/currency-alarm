@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'package:get_it/get_it.dart';
 
-import 'package:currency_alarm/screens/main/main.dart';
+import 'package:currency_alarm/screens/main.dart';
 
 import 'package:currency_alarm/features/exporter.dart'
     show

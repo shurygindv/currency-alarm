@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:currency_alarm/ui/exporter.dart' show Caption;
 
+import 'package:currency_alarm/core/exporter.dart' show AppColors;
+
 import 'package:currency_alarm/features/exporter.dart'
     show DashboardView, CurrencyConverter;
 
@@ -53,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
 
   _buildBottomNavbar() => BottomNavigationBar(
         items: [dashboardNavItem, converterNavItem],
-        selectedItemColor: Color(0xffdc9a2a),
+        selectedItemColor: AppColors.Primary,
         currentIndex: _selectedPanelIndex,
         onTap: _onItemTapped,
       );
@@ -65,7 +67,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffdc9a2a),
+      backgroundColor: AppColors.Primary,
       extendBody: true,
       appBar: _buildHeader(),
       body: _buildBody(),

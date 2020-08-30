@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Caption extends StatelessWidget {
   final String name;
 
-  const Caption({this.name});
+  const Caption({@required this.name});
 
   @override
   Widget build(BuildContext context) {

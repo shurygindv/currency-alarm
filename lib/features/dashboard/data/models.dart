@@ -21,7 +21,7 @@ class CurrencyRateResult {
   final Currency eur;
   final String updateTime;
 
-  CurrencyRateResult({this.usd, this.eur, this.updateTime});
+  CurrencyRateResult({this.usd, this.eur, this.updateTime = ""});
 
   double getUSDRateIn(String key) {
     return usd.getRate(key);
