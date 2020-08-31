@@ -5,10 +5,39 @@ import 'package:currency_alarm/ui/exporter.dart' show FlagIcon;
 import './currency_pluralizer.dart' show CurrencyPluralizer;
 import './currency_text.dart' show CurrencyText;
 
-typedef StringVoidFn = void Function(String);
+import '../../../common/exporter.dart' show CurrencyType;
+
+typedef StringVoidFn = void Function(CurrencyType);
+
+String mapCurrencyTypeToFlagName(CurrencyType t) {
+  // todo: enum const
+  switch (t) {
+    case CurrencyType.EUR:
+      return 'eur';
+    case CurrencyType.USD:
+      return 'us';
+    case CurrencyType.RUB:
+      return 'rus';
+    default:
+      throw new FormatException('CurrectSwitcherControl: unknown error');
+  }
+}
+
+String mapCurrencyTypeToName(CurrencyType t) {
+  switch (t) {
+    case CurrencyType.EUR:
+      return 'eur';
+    case CurrencyType.USD:
+      return 'usd';
+    case CurrencyType.RUB:
+      return 'rub';
+    default:
+      throw new FormatException('CurrencySwitcherControl: unknown error');
+  }
+}
 
 class CurrencyDropdown extends StatelessWidget {
-  final String value;
+  final CurrencyType value;
   final bool backward;
 
   final StringVoidFn onChanged;
@@ -16,23 +45,33 @@ class CurrencyDropdown extends StatelessWidget {
   CurrencyDropdown({this.value, this.onChanged, this.backward = false});
 
   final List<DropdownMenuItem> _menuItems = [
-    DropdownMenuItem(value: 'usd', child: CurrencyText(name: 'usd')),
-    DropdownMenuItem(value: 'eur', child: CurrencyText(name: 'eur')),
-    DropdownMenuItem(value: 'rub', child: CurrencyText(name: 'rub')),
+    DropdownMenuItem(value: CurrencyType.USD, child: CurrencyText(name: 'usd')),
+    DropdownMenuItem(value: CurrencyType.EUR, child: CurrencyText(name: 'eur')),
+    DropdownMenuItem(value: CurrencyType.RUB, child: CurrencyText(name: 'rub')),
   ];
 
-  Widget _buildFlag(String flagName) => Container(
-        width: 40,
-        height: 45,
-        child: FlagIcon(name: flagName),
-      );
+  Widget _buildFlag(String flagName) {
+    return Container(
+      width: 40,
+      height: 45,
+      child: FlagIcon(name: flagName),
+    );
+  }
+
+  Widget _buildFlagByCurrentValue() =>
+      _buildFlag(mapCurrencyTypeToFlagName(value));
 
   Widget _buildFlagLabel(String name) => Container(
       padding: EdgeInsets.only(left: 20, right: 20),
       child: CurrencyPluralizer(amount: 1, name: name));
 
-  Widget _buildSelectedItem() =>
-      Row(children: [_buildFlag(value), _buildFlagLabel(value)]);
+  Widget _buildFlagLabelByCurrentValue() =>
+      _buildFlagLabel(mapCurrencyTypeToName(value));
+
+  Widget _buildSelectedItem() => Row(children: [
+        _buildFlagByCurrentValue(),
+        _buildFlagLabelByCurrentValue(),
+      ]);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +81,7 @@ class CurrencyDropdown extends StatelessWidget {
           value: value,
           elevation: 16,
           isDense: true,
-          icon: backward ? _buildFlag(value) : null,
+          icon: backward ? _buildFlagByCurrentValue() : null,
           iconSize: backward ? 24.0 : 0.0,
           isExpanded: true,
           onChanged: (v) {
@@ -61,8 +100,9 @@ class CurrencyDropdown extends StatelessWidget {
 }
 
 class CurrencySwitcherControl extends StatelessWidget {
-  final String fromValue;
-  final String toValue;
+  final CurrencyType fromValue;
+  final CurrencyType toValue;
+  // =
   final StringVoidFn onFromChanges;
   final StringVoidFn onToChanges;
 

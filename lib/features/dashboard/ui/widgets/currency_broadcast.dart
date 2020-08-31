@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:currency_alarm/ui/exporter.dart' show Loader;
 import 'package:currency_alarm/application.dart' show AppStore;
@@ -17,8 +16,8 @@ class CurrencyBroadcast extends StatefulWidget {
 class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
   bool isFetching = false;
 
-  String _fromCurrencyValue = 'usd';
-  String _toCurrencyValue = 'rub';
+  CurrencyType _fromCurrencyValue = CurrencyType.USD;
+  CurrencyType _toCurrencyValue = CurrencyType.RUB;
 
   void _fetchInitialRates() {
     // Ы
@@ -46,23 +45,17 @@ class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
 
   _getCurrentCurrencyNumber() {
     final currentRate = context.watch<AppStore>().rate;
-    var v;
 
     switch (_fromCurrencyValue) {
-      case 'usd':
-        v = currentRate.getUSDRateIn(_toCurrencyValue.toUpperCase());
-        break;
-      case 'eur':
-        v = currentRate.getEURRateIn(_toCurrencyValue.toUpperCase());
-        break;
-      case 'rub':
-        v = currentRate.getRUBRateIn(_toCurrencyValue.toUpperCase());
-        break;
+      case CurrencyType.USD:
+        return currentRate.getUSDRateIn(_toCurrencyValue);
+      case CurrencyType.EUR:
+        return currentRate.getEURRateIn(_toCurrencyValue);
+      case CurrencyType.RUB:
+        return currentRate.getRUBRateIn(_toCurrencyValue);
+      default:
+        throw new Exception('currency_broadcast: unknown _fromCurrencyValue');
     }
-
-    print(v);
-
-    return v;
   }
 
   Widget _buildCurrentRate() {
@@ -79,8 +72,7 @@ class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
             style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500),
           ),
         ),
-        CurrencySignIcon(
-            alignment: Alignment.topCenter, size: 30.0, name: CurrencyType.EUR)
+        CurrencySignIcon(size: 25.0, name: _toCurrencyValue)
       ],
     );
   }
@@ -117,15 +109,15 @@ class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
         child: Loader(name: 'ripple'),
       );
 
-  void _handleFromChanges(v) {
+  void _handleFromChanges(CurrencyType t) {
     setState(() {
-      _fromCurrencyValue = v;
+      _fromCurrencyValue = t;
     });
   }
 
-  void _handleToChanges(v) {
+  void _handleToChanges(CurrencyType t) {
     setState(() {
-      _toCurrencyValue = v;
+      _toCurrencyValue = t;
     });
   }
 

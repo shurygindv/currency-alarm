@@ -1,3 +1,7 @@
+import 'package:flutter/foundation.dart';
+
+import '../../common/exporter.dart' show CurrencyType;
+
 class Currency {
   final String date;
   final String base;
@@ -24,16 +28,16 @@ class CurrencyRateResult {
 
   CurrencyRateResult({this.usd, this.eur, this.rub, this.updateTime = ""});
 
-  String getUSDRateIn(String key) {
-    return usd.getRate(key).toStringAsFixed(3);
+  String getUSDRateIn(CurrencyType key) {
+    return usd.getRate(describeEnum(key)).toStringAsFixed(3);
   }
 
-  String getEURRateIn(String key) {
-    return eur.getRate(key).toStringAsFixed(3);
+  String getEURRateIn(CurrencyType key) {
+    return eur.getRate(describeEnum(key)).toStringAsFixed(3);
   }
 
-  String getRUBRateIn(String key) {
-    return rub.getRate(key).toStringAsFixed(3);
+  String getRUBRateIn(CurrencyType key) {
+    return rub.getRate(describeEnum(key)).toStringAsFixed(3);
   }
 
   factory CurrencyRateResult.fromJson(

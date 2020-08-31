@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 Map<String, String> assetFlags = {
-  'usd': 'lib/assets/img/us-flag.svg',
+  'us': 'lib/assets/img/us-flag.svg',
   'eur': 'lib/assets/img/eur-union-flag.svg',
-  'rub': 'lib/assets/img/ru-flag.svg',
+  'rus': 'lib/assets/img/ru-flag.svg',
 };
 
 class FlagIcon extends StatelessWidget {
