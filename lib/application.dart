@@ -23,7 +23,9 @@ class AppStore extends ChangeNotifier {
 
   DateTime get timestamp => DateTime.parse(_rateResult.updateTime);
   String get updateTime => DateFormat("d MMMM, hh:mm a").format(timestamp);
+  CurrencyRateResult get rate => _rateResult;
 
+  // =
   CurrencyRateService _getRateService() =>
       GetIt.instance.get<CurrencyRateService>();
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../common/types.dart' show CurrencyType;
+import '../types.dart' show CurrencyType;
 
 // todo: typed map
 String resolveAssetPath(CurrencyType name) {
@@ -22,15 +22,21 @@ String resolveAssetPath(CurrencyType name) {
 
 class CurrencySignIcon extends StatelessWidget {
   final CurrencyType name;
+  final Alignment alignment;
+  final double size;
 
-  const CurrencySignIcon({@required this.name});
+  const CurrencySignIcon(
+      {@required this.name,
+      @required this.size,
+      this.alignment = Alignment.center});
 
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       resolveAssetPath(name),
-      height: 20.0,
-      width: 20.0,
+      alignment: alignment,
+      height: size,
+      width: size,
     );
   }
 }

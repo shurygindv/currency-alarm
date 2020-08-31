@@ -11,7 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../data/models.dart' show ConverterResult;
 import '../../../common/types.dart' show CurrencyType;
 
-import '../widgets/currency_sign_icon.dart' show CurrencySignIcon;
+import '../../../common/exporter.dart' show CurrencySignIcon;
 
 final _debouncer = Debouncer(delay: Duration(milliseconds: 300));
 
@@ -190,7 +190,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
             keyboardType: TextInputType.number,
             onChanged: _handleBuyInputChanges,
             decoration: InputDecoration(
-                icon: CurrencySignIcon(name: _buyCurrencyType),
+                icon: CurrencySignIcon(name: _buyCurrencyType, size: 20),
                 border: OutlineInputBorder(),
                 suffixIcon: _isBuyFetching ? _buildRingLoader() : null,
                 labelText: 'Buy (from)'),
@@ -204,7 +204,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
             keyboardType: TextInputType.number,
             onChanged: _handleSellInputChanges,
             decoration: InputDecoration(
-                icon: CurrencySignIcon(name: _sellCurrencytype),
+                icon: CurrencySignIcon(name: _sellCurrencytype, size: 20),
                 border: OutlineInputBorder(),
                 suffixIcon: _isSellFetching ? _buildRingLoader() : null,
                 labelText: 'Sell (to)'),

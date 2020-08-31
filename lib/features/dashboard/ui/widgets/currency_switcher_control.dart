@@ -5,22 +5,15 @@ import 'package:currency_alarm/ui/exporter.dart' show FlagIcon;
 import './currency_pluralizer.dart' show CurrencyPluralizer;
 import './currency_text.dart' show CurrencyText;
 
-class CurrencyDropdown extends StatefulWidget {
-  String value = 'usd';
-  bool backward = false;
+typedef StringVoidFn = void Function(String);
 
-  CurrencyDropdown({this.value, this.backward = false});
+class CurrencyDropdown extends StatelessWidget {
+  final String value;
+  final bool backward;
 
-  @override
-  _CurrencyDropdownState createState() =>
-      _CurrencyDropdownState(value: value, backward: backward);
-}
+  final StringVoidFn onChanged;
 
-class _CurrencyDropdownState extends State<CurrencyDropdown> {
-  String value;
-  bool backward = false;
-
-  _CurrencyDropdownState({this.value, this.backward = false});
+  CurrencyDropdown({this.value, this.onChanged, this.backward = false});
 
   final List<DropdownMenuItem> _menuItems = [
     DropdownMenuItem(value: 'usd', child: CurrencyText(name: 'usd')),
@@ -53,9 +46,7 @@ class _CurrencyDropdownState extends State<CurrencyDropdown> {
           iconSize: backward ? 24.0 : 0.0,
           isExpanded: true,
           onChanged: (v) {
-            setState(() {
-              value = v;
-            });
+            onChanged(v);
           },
           items: _menuItems,
           selectedItemBuilder: backward
@@ -69,19 +60,26 @@ class _CurrencyDropdownState extends State<CurrencyDropdown> {
   }
 }
 
-class CurrencySwitcherControl extends StatefulWidget {
-  @override
-  _CurrencySwitcherControlState createState() =>
-      _CurrencySwitcherControlState();
-}
+class CurrencySwitcherControl extends StatelessWidget {
+  final String fromValue;
+  final String toValue;
+  final StringVoidFn onFromChanges;
+  final StringVoidFn onToChanges;
 
-class _CurrencySwitcherControlState extends State<CurrencySwitcherControl> {
+  const CurrencySwitcherControl({
+    this.fromValue,
+    this.toValue,
+    this.onFromChanges,
+    this.onToChanges,
+  });
+
   Widget _buildLeftDropdown() => CurrencyDropdown(
-        value: 'usd',
+        value: fromValue,
+        onChanged: onFromChanges,
       );
 
   Widget _buildRightDropdown() =>
-      CurrencyDropdown(value: 'eur', backward: true);
+      CurrencyDropdown(value: toValue, onChanged: onToChanges, backward: true);
 
   Widget _buildDirectionWidget() => Flexible(
           child: Container(

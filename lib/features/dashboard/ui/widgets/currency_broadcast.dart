@@ -7,6 +7,8 @@ import 'package:currency_alarm/application.dart' show AppStore;
 
 import './currency_switcher_control.dart' show CurrencySwitcherControl;
 
+import '../../../common/exporter.dart' show CurrencySignIcon, CurrencyType;
+
 class CurrencyBroadcast extends StatefulWidget {
   @override
   _CurrencyBroadcastState createState() => _CurrencyBroadcastState();
@@ -14,6 +16,9 @@ class CurrencyBroadcast extends StatefulWidget {
 
 class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
   bool isFetching = false;
+
+  String _fromCurrencyValue = 'usd';
+  String _toCurrencyValue = 'rub';
 
   void _fetchInitialRates() {
     // Ы
@@ -39,7 +44,30 @@ class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
     _fetchInitialRates();
   }
 
+  _getCurrentCurrencyNumber() {
+    final currentRate = context.watch<AppStore>().rate;
+    var v;
+
+    switch (_fromCurrencyValue) {
+      case 'usd':
+        v = currentRate.getUSDRateIn(_toCurrencyValue.toUpperCase());
+        break;
+      case 'eur':
+        v = currentRate.getEURRateIn(_toCurrencyValue.toUpperCase());
+        break;
+      case 'rub':
+        v = currentRate.getRUBRateIn(_toCurrencyValue.toUpperCase());
+        break;
+    }
+
+    print(v);
+
+    return v;
+  }
+
   Widget _buildCurrentRate() {
+    final value = _getCurrentCurrencyNumber();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,16 +75,12 @@ class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
         Container(
           padding: EdgeInsets.only(right: 10),
           child: Text(
-            '74.57',
+            '$value',
             style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500),
           ),
         ),
-        SvgPicture.asset(
-          'lib/assets/img/euro-sign.svg',
-          alignment: Alignment.topCenter,
-          height: 30.0,
-          width: 30.0,
-        ),
+        CurrencySignIcon(
+            alignment: Alignment.topCenter, size: 30.0, name: CurrencyType.EUR)
       ],
     );
   }
@@ -93,12 +117,29 @@ class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
         child: Loader(name: 'ripple'),
       );
 
+  void _handleFromChanges(v) {
+    setState(() {
+      _fromCurrencyValue = v;
+    });
+  }
+
+  void _handleToChanges(v) {
+    setState(() {
+      _toCurrencyValue = v;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         isFetching ? _buildLoader() : _buildCurrencyRateDisplay(),
-        CurrencySwitcherControl(),
+        CurrencySwitcherControl(
+          fromValue: _fromCurrencyValue,
+          toValue: _toCurrencyValue,
+          onFromChanges: _handleFromChanges,
+          onToChanges: _handleToChanges,
+        ),
       ],
     );
   }

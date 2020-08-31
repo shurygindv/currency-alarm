@@ -5,7 +5,7 @@ class Currency {
 
   Currency({this.date, this.base, this.rates});
 
-  double getRate(String key) => rates[key] as double;
+  double getRate(String key) => rates[key] + 0.0 as double;
 
   factory Currency.fromJson(Map<String, dynamic> json) {
     return Currency(
@@ -19,16 +19,21 @@ class Currency {
 class CurrencyRateResult {
   final Currency usd;
   final Currency eur;
+  final Currency rub;
   final String updateTime;
 
-  CurrencyRateResult({this.usd, this.eur, this.updateTime = ""});
+  CurrencyRateResult({this.usd, this.eur, this.rub, this.updateTime = ""});
 
-  double getUSDRateIn(String key) {
-    return usd.getRate(key);
+  String getUSDRateIn(String key) {
+    return usd.getRate(key).toStringAsFixed(3);
   }
 
-  double getEURRateIn(String key) {
-    return eur.getRate(key);
+  String getEURRateIn(String key) {
+    return eur.getRate(key).toStringAsFixed(3);
+  }
+
+  String getRUBRateIn(String key) {
+    return rub.getRate(key).toStringAsFixed(3);
   }
 
   factory CurrencyRateResult.fromJson(
@@ -36,5 +41,6 @@ class CurrencyRateResult {
       CurrencyRateResult(
           usd: Currency.fromJson(data['USD'] as Map<String, dynamic>),
           eur: Currency.fromJson(data['EUR'] as Map<String, dynamic>),
+          rub: Currency.fromJson(data['RUB'] as Map<String, dynamic>),
           updateTime: updateTime);
 }
