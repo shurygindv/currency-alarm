@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+/*
+  1. Currency value (observing)
+
+  Keep specified value in local store
+  Set background task and fetch in specified period
+  when time comes -> show push notification
+*/
+
 class ActiveCurrencyAlarms extends StatefulWidget {
   @override
   _ActiveCurrencyAlarmsState createState() => _ActiveCurrencyAlarmsState();
