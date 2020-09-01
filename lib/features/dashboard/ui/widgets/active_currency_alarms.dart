@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import './adding_alarm_dialog.dart' show AddingAlarmDialog;
 /*
   1. Currency value (observing)
 
@@ -9,6 +10,10 @@ import 'package:flutter/material.dart';
 */
 
 class ActiveCurrencyAlarms extends StatefulWidget {
+  final double currencyNumber;
+
+  ActiveCurrencyAlarms({this.currencyNumber = 0.0});
+
   @override
   _ActiveCurrencyAlarmsState createState() => _ActiveCurrencyAlarmsState();
 }
@@ -18,40 +23,7 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
     return showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              content: SingleChildScrollView(
-                  child: Container(
-                      child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.remove, size: 30),
-                    onPressed: () {},
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15),
-                    child: Text('76.6', style: TextStyle(fontSize: 25)),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.add, size: 30),
-                    onPressed: () {},
-                  )
-                ],
-              ))
-                  //=
-                  ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Notify me'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ));
+        builder: (BuildContext context) => AddingAlarmDialog());
   }
 
   Widget _buildAlarmListSection() => Column(children: [
