@@ -1,17 +1,18 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+// todo: inst
 class Storage {
   get manager async => await SharedPreferences.getInstance();
 
-  static void setString(String key, String value) async {
+  static Future<bool> setDouble(String key, double value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    prefs.setString(key, value);
+    return prefs.setDouble(key, value);
   }
 
-  static Future<String> getString(String key) async {
+  static Future<double> getDouble(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    return prefs.getString(key);
+    return prefs.getDouble(key);
   }
 }
