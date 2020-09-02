@@ -1,17 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter/material.dart' show runApp;
 
 import './application.dart' show Application;
-import './features/bootstrap.dart' as features;
 
-void registerDependencies() {
-  features.setup(<T>(T feature) {
-    GetIt.I.registerSingleton(feature);
-  });
-}
-
-void main() {
-  registerDependencies();
-  // =
+void main() async {
   runApp(Application());
 }

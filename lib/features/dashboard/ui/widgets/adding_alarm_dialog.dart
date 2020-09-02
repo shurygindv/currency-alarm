@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:currency_alarm/features/exporter.dart' show AlarmStorageService;
-import 'package:currency_alarm/application.dart' show resolveDependency;
-
 class Counter extends StatelessWidget {
   final double value;
 
@@ -50,26 +47,28 @@ class Counter extends StatelessWidget {
 
 class AddingAlarmDialog extends StatefulWidget {
   final double currencyNumber;
+  final Future<bool> Function(double c) onSubmit;
 
-  AddingAlarmDialog({this.currencyNumber = 71.42});
+  AddingAlarmDialog({this.currencyNumber = 71.42, this.onSubmit});
 
   @override
-  _AddingAlarmDialogState createState() => _AddingAlarmDialogState();
+  _AddingAlarmDialogState createState() => _AddingAlarmDialogState(
+        onSubmit: onSubmit,
+      );
 }
 
 class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
-  final alarmStorage = resolveDependency<AlarmStorageService>();
-
   double currencyValue;
+
+  Future<bool> Function(double c) onSubmit;
+
+  _AddingAlarmDialogState({this.onSubmit});
 
   void setCurrency(double v) {
     setState(() {
       currencyValue = v;
     });
   }
-
-  Future<bool> saveTypedCurrencyInStorage() =>
-      alarmStorage.addCurrencyAlarm(currencyValue);
 
   void setInitialCurrencyValue() {
     setCurrency(widget.currencyNumber);
@@ -113,7 +112,7 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
         FlatButton(
           child: Text('Notify me'),
           onPressed: () {
-            saveTypedCurrencyInStorage()
+            onSubmit(currencyValue)
                 .whenComplete(() => Navigator.of(context).pop());
           },
         ),

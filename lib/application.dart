@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:currency_alarm/screens/main.dart';
 
+import './features/bootstrap.dart' as features;
 import 'package:currency_alarm/features/exporter.dart'
     show
         CurrencyRateResult,
@@ -61,7 +62,7 @@ class AppStore extends ChangeNotifier {
 
 class Application extends StatefulWidget {
   @override
-  _ApplicationState createState() => new _ApplicationState();
+  _ApplicationState createState() => _ApplicationState();
 }
 
 class _ApplicationState extends State<Application> {
@@ -71,13 +72,25 @@ class _ApplicationState extends State<Application> {
   void initState() {
     super.initState();
 
-    initPlatformState();
+    _initializdeDeps();
   }
 
-  initPlatformState() {}
+  _initializdeDeps() {
+    features.setup();
+  }
 
-  Widget _buildApp() => MaterialApp(
-      title: _title, theme: ThemeData(fontFamily: 'Rubik'), home: MainScreen());
+  Widget _buildApp() => FutureBuilder(
+      future: GetIt.I.allReady(), // todo: loader, connector wrapper
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return MaterialApp(
+              title: _title,
+              theme: ThemeData(fontFamily: 'Rubik'),
+              home: MainScreen());
+        }
+
+        return Container();
+      });
 
   @override
   Widget build(BuildContext context) {

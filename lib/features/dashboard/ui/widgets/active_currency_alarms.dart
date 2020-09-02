@@ -11,19 +11,26 @@ import './adding_alarm_dialog.dart' show AddingAlarmDialog;
 
 class ActiveCurrencyAlarms extends StatefulWidget {
   final double currencyNumber;
+  final Future<bool> Function(double c) onAlarmSubmit;
 
-  ActiveCurrencyAlarms({this.currencyNumber = 0.0});
+  ActiveCurrencyAlarms({this.currencyNumber = 0.0, this.onAlarmSubmit});
 
   @override
-  _ActiveCurrencyAlarmsState createState() => _ActiveCurrencyAlarmsState();
+  _ActiveCurrencyAlarmsState createState() =>
+      _ActiveCurrencyAlarmsState(onAlarmSubmit: onAlarmSubmit);
 }
 
 class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
+  Future<bool> Function(double c) onAlarmSubmit;
+
+  _ActiveCurrencyAlarmsState({@required this.onAlarmSubmit});
+
   Future<void> _showAddingAlarmDialog() async {
     return showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) => AddingAlarmDialog());
+        builder: (BuildContext context) =>
+            AddingAlarmDialog(onSubmit: onAlarmSubmit));
   }
 
   Widget _buildAlarmListSection() => Column(children: [

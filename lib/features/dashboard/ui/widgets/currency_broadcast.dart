@@ -1,58 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'package:currency_alarm/ui/exporter.dart' show Loader;
-import 'package:currency_alarm/application.dart' show AppStore;
 
 import './currency_switcher_control.dart' show CurrencySwitcherControl;
 
 import '../../../common/exporter.dart' show CurrencySignIcon, CurrencyType;
+import '../../data/models.dart' show CurrencyRateResult;
 
-class CurrencyBroadcast extends StatefulWidget {
-  @override
-  _CurrencyBroadcastState createState() => _CurrencyBroadcastState();
-}
+typedef CurrencyChangeFn = void Function(CurrencyType t);
 
-class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
+class CurrencyBroadcast extends StatelessWidget {
   bool isFetching = false;
 
-  CurrencyType _fromCurrencyValue = CurrencyType.USD;
-  CurrencyType _toCurrencyValue = CurrencyType.RUB;
+  CurrencyType fromCurrencyValue;
+  CurrencyType toCurrencyValue;
 
-  void _fetchInitialRates() {
-    // Ы
-    Future.microtask(() async {
-      setState(() {
-        isFetching = true;
-      });
+  CurrencyChangeFn onFromChanges;
+  CurrencyChangeFn onToChanges;
 
-      await AppStore.getProvider(context).fetchRates();
+  String updateTime;
+  CurrencyRateResult currentRate;
 
-      if (mounted) {
-        setState(() {
-          isFetching = false;
-        });
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _fetchInitialRates();
-  }
+  CurrencyBroadcast({
+    this.fromCurrencyValue,
+    this.toCurrencyValue,
+    this.onFromChanges,
+    this.onToChanges,
+    this.isFetching,
+    this.updateTime,
+    this.currentRate,
+  });
 
   _getCurrentCurrencyNumber() {
-    final currentRate = context.watch<AppStore>().rate;
-
-    switch (_fromCurrencyValue) {
+    switch (fromCurrencyValue) {
       case CurrencyType.USD:
-        return currentRate.getUSDRateIn(_toCurrencyValue);
+        return currentRate.getUSDRateIn(toCurrencyValue);
       case CurrencyType.EUR:
-        return currentRate.getEURRateIn(_toCurrencyValue);
+        return currentRate.getEURRateIn(toCurrencyValue);
       case CurrencyType.RUB:
-        return currentRate.getRUBRateIn(_toCurrencyValue);
+        return currentRate.getRUBRateIn(toCurrencyValue);
       default:
         throw new Exception('currency_broadcast: unknown _fromCurrencyValue');
     }
@@ -72,14 +58,12 @@ class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
             style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500),
           ),
         ),
-        CurrencySignIcon(size: 25.0, name: _toCurrencyValue)
+        CurrencySignIcon(size: 25.0, name: toCurrencyValue)
       ],
     );
   }
 
   Widget _buildLastRateUpdateTime() {
-    final updateTime = context.watch<AppStore>().updateTime;
-
     return Column(
       children: [
         Container(
@@ -110,15 +94,11 @@ class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
       );
 
   void _handleFromChanges(CurrencyType t) {
-    setState(() {
-      _fromCurrencyValue = t;
-    });
+    onFromChanges(t);
   }
 
   void _handleToChanges(CurrencyType t) {
-    setState(() {
-      _toCurrencyValue = t;
-    });
+    onToChanges(t);
   }
 
   @override
@@ -127,8 +107,8 @@ class _CurrencyBroadcastState extends State<CurrencyBroadcast> {
       children: [
         isFetching ? _buildLoader() : _buildCurrencyRateDisplay(),
         CurrencySwitcherControl(
-          fromValue: _fromCurrencyValue,
-          toValue: _toCurrencyValue,
+          fromValue: fromCurrencyValue,
+          toValue: toCurrencyValue,
           onFromChanges: _handleFromChanges,
           onToChanges: _handleToChanges,
         ),

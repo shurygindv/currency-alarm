@@ -6,11 +6,12 @@ class BackgroundTask {
   static Future<int> work(TaskFn fn) {
     // default cfg
     final config = BackgroundFetchConfig(
-        minimumFetchInterval: 360,
+        minimumFetchInterval: 15,
         stopOnTerminate: true,
         requiresBatteryNotLow: false,
         forceAlarmManager: false,
-        requiresDeviceIdle: true);
+        requiresDeviceIdle: false,
+        requiredNetworkType: NetworkType.ANY);
 
     return BackgroundFetch.configure(config, (String taskId) async {
       await fn(taskId);
