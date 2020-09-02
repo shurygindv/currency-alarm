@@ -2,6 +2,8 @@ import 'package:get_it/get_it.dart';
 //=
 import 'exporter.dart'
     show
+        DataStorageService,
+        //=
         CurrencyConverterService,
         CurrencyRateService,
         AlarmStorageService,
@@ -24,7 +26,10 @@ void setup() {
   GetIt.I.registerSingletonAsync<AlarmNotificationService>(
       () => AlarmNotificationService().init());
 
+  GetIt.I.registerSingletonAsync<DataStorageService>(
+      () => DataStorageService().init());
+
   GetIt.I.registerSingletonWithDependencies<AlarmStorageService>(
       () => AlarmStorageService(),
-      dependsOn: [AlarmNotificationService]);
+      dependsOn: [AlarmNotificationService, DataStorageService]);
 }

@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 
 import './adding_alarm_dialog.dart' show AddingAlarmDialog;
+import 'package:currency_alarm/features/exporter.dart'
+    show ActivatedAlarmOptions;
 
 class ActiveCurrencyAlarms extends StatefulWidget {
-  final double currencyNumber;
+  final bool isAlarmActive;
+  final ActivatedAlarmOptions alarmOptions;
   final Future<bool> Function(double c) onAlarmSubmit;
 
-  ActiveCurrencyAlarms({this.currencyNumber = 0.0, this.onAlarmSubmit});
+  ActiveCurrencyAlarms(
+      {this.onAlarmSubmit, this.alarmOptions, this.isAlarmActive});
 
   @override
-  _ActiveCurrencyAlarmsState createState() =>
-      _ActiveCurrencyAlarmsState(onAlarmSubmit: onAlarmSubmit);
+  _ActiveCurrencyAlarmsState createState() => _ActiveCurrencyAlarmsState();
 }
 
 class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
-  Future<bool> Function(double c) onAlarmSubmit;
-
-  _ActiveCurrencyAlarmsState({@required this.onAlarmSubmit});
-
   Future<void> _showAddingAlarmDialog() async {
     return showDialog<void>(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) =>
-            AddingAlarmDialog(onSubmit: onAlarmSubmit));
+            AddingAlarmDialog(onSubmit: widget.onAlarmSubmit));
   }
 
   _buildAlarmListHeader() => Container(
@@ -62,11 +61,24 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
     );
   }
 
+  _buildActiveAlarmStatistics() {
+    return Container(
+      child: Text(widget.alarmOptions.currency.toString()),
+    );
+  }
+
+  _buildAlarmContent() {
+    return Container(
+        child: widget.isAlarmActive
+            ? _buildActiveAlarmStatistics()
+            : _buildAddingCurrencyAlarmButton());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       _buildAlarmListHeader(),
-      _buildAddingCurrencyAlarmButton(),
+      _buildAlarmContent(),
     ]);
   }
 }

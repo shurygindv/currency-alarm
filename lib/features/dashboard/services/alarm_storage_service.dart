@@ -1,37 +1,36 @@
 import 'package:currency_alarm/features/dashboard/data/models.dart';
-import 'package:currency_alarm/libs/storage.dart' show Storage;
 import 'package:currency_alarm/libs/background_task.dart' show BackgroundTask;
-import 'package:currency_alarm/application.dart' show resolveDependency;
+import 'package:currency_alarm/application.dart' show injectDependency;
 
 import './../exporter.dart'
     show CurrencyRateService, AlarmNotificationService, ActivatedAlarmOptions;
-import './../../common/exporter.dart' show CurrencyType;
 
-const ALARM_STORAGE_KEY = '_ALARM_STORAGE_KEY_';
+import './../../common/exporter.dart' show CurrencyType, DataStorageService;
+
+const String ALARM_STORAGE_KEY = 'alarmstorage';
 
 bool isSuccessfulSave(bool v) => v == true;
 
 int i = 0;
 
 class AlarmStorageService {
-  Storage storage;
-
-  final currencyService = resolveDependency<CurrencyRateService>();
-  final notificationService = resolveDependency<AlarmNotificationService>();
+  final notificationService = injectDependency<AlarmNotificationService>();
+  final currencyService = injectDependency<CurrencyRateService>();
+  final storageService = injectDependency<DataStorageService>();
 
   // only one
-  Future<int> activateCurrencyAlarm({
+  Future<bool> activateCurrencyAlarm({
     double currency,
     CurrencyType fromCurrency,
     CurrencyType toCurrency,
   }) async {
-    Map<String, dynamic> activationOptions = {
-      "to": toCurrency,
-      "from": fromCurrency,
-      "currency": currency
-    };
+    await _resetExistingAlarms();
 
-    final result = await Storage.setMap(ALARM_STORAGE_KEY, activationOptions);
+    final activationOptions =
+        ActivatedAlarmOptions.toMap(fromCurrency, toCurrency, currency);
+
+    final result =
+        await storageService.setMap(ALARM_STORAGE_KEY, activationOptions);
 
     if (isSuccessfulSave(result) == true)
       _putAlarmTaskInBackground(
@@ -40,11 +39,11 @@ class AlarmStorageService {
         toCurrency: toCurrency,
       );
 
-    return 1;
+    return result;
   }
 
-  Future<ActivatedAlarmOptions> getActiveAlarmValue() async {
-    final result = await Storage.getMap(ALARM_STORAGE_KEY);
+  Future<ActivatedAlarmOptions> getActiveAlarmOptions() async {
+    final result = await storageService.getMap(ALARM_STORAGE_KEY);
 
     if (result == null) {
       return null;
@@ -54,7 +53,7 @@ class AlarmStorageService {
   }
 
   Future<bool> isAlarmActive() async {
-    final result = await getActiveAlarmValue();
+    final result = await getActiveAlarmOptions();
 
     return result != null;
   }
@@ -69,9 +68,9 @@ class AlarmStorageService {
         body: 'currency has reached specified value');
   }
 
-  _resetAlarm() async {
+  _resetExistingAlarms() async {
     await BackgroundTask.stopAllTasks();
-    await Storage.removeByKey(ALARM_STORAGE_KEY);
+    await storageService.removeByKey(ALARM_STORAGE_KEY);
   }
 
   _putAlarmTaskInBackground({
@@ -79,13 +78,10 @@ class AlarmStorageService {
     CurrencyType fromCurrency,
     CurrencyType toCurrency,
   }) async {
-    await _resetAlarm();
-
     BackgroundTask.work((String _taskId) async {
       final rate = await _fetchRates();
       String updated;
 
-      print("DA");
       switch (fromCurrency) {
         case CurrencyType.USD:
           updated = rate.getUSDRateIn(toCurrency);
@@ -106,7 +102,7 @@ class AlarmStorageService {
       print(v <= currency);
       if (v <= currency) {
         await _showAlarmNotification();
-        await _resetAlarm();
+        await _resetExistingAlarms();
       }
       print(i++);
     });

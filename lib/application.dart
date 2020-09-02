@@ -16,7 +16,7 @@ import 'package:currency_alarm/features/exporter.dart'
         CurrencyConverterService,
         CurrencyType;
 
-T resolveDependency<T>() {
+T injectDependency<T>() {
   return GetIt.instance.get<T>();
 }
 
@@ -32,10 +32,10 @@ class AppStore extends ChangeNotifier {
 
   // =
   CurrencyRateService _getRateService() =>
-      resolveDependency<CurrencyRateService>();
+      injectDependency<CurrencyRateService>();
 
   CurrencyConverterService _getConverterService() =>
-      resolveDependency<CurrencyConverterService>();
+      injectDependency<CurrencyConverterService>();
 
   Future<CurrencyRateResult> _fetchCurrencyRates() {
     return _getRateService().fetchRate();

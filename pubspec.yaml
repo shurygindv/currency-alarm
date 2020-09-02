@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^0.5.8
+  shared_preferences: ^0.5.10
   flutter_svg: ^0.18.0
   provider: ^4.3.2+1
   flutter_spinkit: ^4.1.2

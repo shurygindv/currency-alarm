@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../../common/exporter.dart' show CurrencyType;
+import '../../common/exporter.dart';
 
 class Currency {
   final String date;
@@ -58,7 +58,16 @@ class ActivatedAlarmOptions {
 
   factory ActivatedAlarmOptions.fromJson(Map<String, dynamic> data) =>
       ActivatedAlarmOptions(
-          from: data['from'] as CurrencyType,
-          to: data['to'] as CurrencyType,
+          from: CurrencyType.from[data['from'] as String],
+          to: CurrencyType.from[data['to'] as String],
           currency: (data['currency'] as double) + 0.0);
+
+  static Map<String, dynamic> toMap(
+      CurrencyType from, CurrencyType to, double currency) {
+    return {
+      'from': describeEnum(from),
+      'to': describeEnum(to),
+      'currency': describeEnum(currency),
+    };
+  }
 }
