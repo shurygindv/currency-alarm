@@ -59,8 +59,22 @@ class AppStore extends ChangeNotifier {
   }
 }
 
-class Application extends StatelessWidget {
+class Application extends StatefulWidget {
+  @override
+  _ApplicationState createState() => new _ApplicationState();
+}
+
+class _ApplicationState extends State<Application> {
   static const String _title = 'currency alarm';
+
+  @override
+  void initState() {
+    super.initState();
+
+    initPlatformState();
+  }
+
+  initPlatformState() {}
 
   Widget _buildApp() => MaterialApp(
       title: _title, theme: ThemeData(fontFamily: 'Rubik'), home: MainScreen());
