@@ -6,7 +6,8 @@ import '../widgets/currency_broadcast.dart' show CurrencyBroadcast;
 import '../widgets/active_currency_alarms.dart' show ActiveCurrencyAlarms;
 import '../../../common/exporter.dart' show CurrencyType;
 
-import 'package:currency_alarm/features/exporter.dart' show AlarmStorageService;
+import 'package:currency_alarm/features/exporter.dart'
+    show AlarmStorageService, ActivatedAlarmOptions;
 import 'package:currency_alarm/application.dart' show resolveDependency;
 
 class DashboardView extends StatefulWidget {
@@ -18,6 +19,8 @@ class _DashboardViewState extends State<DashboardView> {
   bool _isRateFetching = false;
   CurrencyType _fromCurrencyValue = CurrencyType.USD;
   CurrencyType _toCurrencyValue = CurrencyType.RUB;
+
+  ActivatedAlarmOptions alarmOptions;
 
   final alarmStorage = resolveDependency<AlarmStorageService>();
 
@@ -38,11 +41,26 @@ class _DashboardViewState extends State<DashboardView> {
     });
   }
 
+  _setActiveAlarm(ActivatedAlarmOptions options) {
+    setState(() {
+      alarmOptions = options;
+    });
+  }
+
+  Future<void> _pullActivatedAlarmValue() async {
+    final result = await alarmStorage.getActiveAlarmValue();
+
+    if (result == null) return;
+
+    _setActiveAlarm(result);
+  }
+
   @override
   void initState() {
     super.initState();
 
     _fetchInitialRates();
+    _pullActivatedAlarmValue();
   }
 
   void _handleFromChanges(CurrencyType t) {
@@ -58,7 +76,7 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   Future<bool> _handleAlarmSubmit(double enteredCurrency) async {
-    await alarmStorage.addCurrencyAlarm(
+    await alarmStorage.activateCurrencyAlarm(
       currency: enteredCurrency,
       fromCurrency: _fromCurrencyValue,
       toCurrency: _toCurrencyValue,

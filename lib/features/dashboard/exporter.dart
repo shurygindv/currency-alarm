@@ -4,4 +4,4 @@ export './services/alarm_notification_service.dart'
     show AlarmNotificationService;
 // =
 export './ui/views/dashboard.dart' show DashboardView;
-export './data/models.dart' show CurrencyRateResult;
+export './data/models.dart' show CurrencyRateResult, ActivatedAlarmOptions;

@@ -48,3 +48,17 @@ class CurrencyRateResult {
           rub: Currency.fromJson(data['RUB'] as Map<String, dynamic>),
           updateTime: updateTime);
 }
+
+class ActivatedAlarmOptions {
+  CurrencyType from;
+  CurrencyType to;
+  double currency;
+
+  ActivatedAlarmOptions({this.from, this.to, this.currency});
+
+  factory ActivatedAlarmOptions.fromJson(Map<String, dynamic> data) =>
+      ActivatedAlarmOptions(
+          from: data['from'] as CurrencyType,
+          to: data['to'] as CurrencyType,
+          currency: (data['currency'] as double) + 0.0);
+}
