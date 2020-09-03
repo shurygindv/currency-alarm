@@ -94,14 +94,15 @@ class _DashboardViewState extends State<DashboardView> {
 
     return Container(
         margin: EdgeInsets.only(left: 15),
-        child: Column(
+        child: Expanded(
+            child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // todo: rework
             CurrencyBroadcast(
                 fromCurrencyValue: _fromCurrencyValue,
-                toCurrencyValue: _fromCurrencyValue,
+                toCurrencyValue: _toCurrencyValue,
                 onFromChanges: _handleFromChanges,
                 onToChanges: _handleToChanges,
                 isFetching: _isRateFetching,
@@ -113,6 +114,6 @@ class _DashboardViewState extends State<DashboardView> {
               alarmOptions: alarmOptions,
             )
           ],
-        ));
+        )));
   }
 }

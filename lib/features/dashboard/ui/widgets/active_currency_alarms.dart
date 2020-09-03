@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import './adding_alarm_dialog.dart' show AddingAlarmDialog;
+
+import 'package:currency_alarm/libs/flusher-animated-icon.dart'
+    show FlusherAnimatedIcon;
 import 'package:currency_alarm/features/exporter.dart'
     show ActivatedAlarmOptions;
 
@@ -62,9 +65,7 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
   }
 
   _buildActiveAlarmStatistics() {
-    return Container(
-      child: Text(widget.alarmOptions.currency.toString()),
-    );
+    return FlusherAnimatedIcon();
   }
 
   _buildAlarmContent() {

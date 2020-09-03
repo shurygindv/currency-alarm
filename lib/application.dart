@@ -72,10 +72,10 @@ class _ApplicationState extends State<Application> {
   void initState() {
     super.initState();
 
-    _initializdeDeps();
+    _registerAppDependencies();
   }
 
-  _initializdeDeps() {
+  _registerAppDependencies() {
     features.setup();
   }
 

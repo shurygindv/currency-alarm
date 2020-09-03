@@ -7,13 +7,13 @@ import '../types.dart' show CurrencyType;
 String resolveAssetPath(CurrencyType name) {
   switch (name) {
     case CurrencyType.USD:
-      return 'lib/assets/img/dollar-sign.svg';
+      return 'assets/img/dollar-sign.svg';
 
     case CurrencyType.RUB:
-      return 'lib/assets/img/ruble-sign.svg';
+      return 'assets/img/ruble-sign.svg';
 
     case CurrencyType.EUR:
-      return 'lib/assets/img/euro-sign.svg';
+      return 'assets/img/euro-sign.svg';
 
     default:
       throw new FormatException('Expected CurrencyType v');
