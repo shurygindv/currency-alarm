@@ -94,8 +94,7 @@ class _DashboardViewState extends State<DashboardView> {
 
     return Container(
         margin: EdgeInsets.only(left: 15),
-        child: Expanded(
-            child: Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -108,12 +107,13 @@ class _DashboardViewState extends State<DashboardView> {
                 isFetching: _isRateFetching,
                 currentRate: currentRate,
                 updateTime: updateTime),
-            ActiveCurrencyAlarms(
+            Expanded(
+                child: ActiveCurrencyAlarms(
               onAlarmSubmit: _handleAlarmSubmit,
               isAlarmActive: alarmOptions != null,
               alarmOptions: alarmOptions,
-            )
+            ))
           ],
-        )));
+        ));
   }
 }
