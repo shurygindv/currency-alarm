@@ -47,7 +47,7 @@ class _DashboardViewState extends State<DashboardView> {
     });
   }
 
-  Future<void> _pullActivatedAlarmValue() async {
+  Future<void> _updateActivationStatus() async {
     final result = await alarmStorage.getActiveAlarmOptions();
 
     if (result == null) return;
@@ -60,7 +60,7 @@ class _DashboardViewState extends State<DashboardView> {
     super.initState();
 
     _fetchInitialRates();
-    _pullActivatedAlarmValue();
+    _updateActivationStatus();
   }
 
   void _handleFromChanges(CurrencyType t) {
@@ -75,14 +75,22 @@ class _DashboardViewState extends State<DashboardView> {
     });
   }
 
-  Future<bool> _handleAlarmSubmit(double enteredCurrency) async {
+  Future<void> _deactivateAlarm() async {
+    await alarmStorage.deactivateAlarm();
+    // todo: rework, reactive
+    setState(() {
+      alarmOptions = null;
+    });
+  }
+
+  Future<bool> _activateAlarm(double enteredCurrency) async {
     final result = await alarmStorage.activateCurrencyAlarm(
       currency: enteredCurrency,
       fromCurrency: _fromCurrencyValue,
       toCurrency: _toCurrencyValue,
     );
-
-    setState(() {});
+    // todo: rework, reactive
+    await _updateActivationStatus();
 
     return result;
   }
@@ -93,7 +101,7 @@ class _DashboardViewState extends State<DashboardView> {
     final currentRate = context.watch<AppStore>().rate;
 
     return Container(
-        margin: EdgeInsets.only(left: 15),
+        margin: EdgeInsets.only(left: 10, right: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +117,8 @@ class _DashboardViewState extends State<DashboardView> {
                 updateTime: updateTime),
             Expanded(
                 child: ActiveCurrencyAlarms(
-              onAlarmSubmit: _handleAlarmSubmit,
+              onAlarmSubmit: _activateAlarm,
+              onAlarmDeactivate: _deactivateAlarm,
               isAlarmActive: alarmOptions != null,
               alarmOptions: alarmOptions,
             ))

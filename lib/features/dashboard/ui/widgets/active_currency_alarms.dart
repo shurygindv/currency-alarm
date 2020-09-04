@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // TODO: avoid the dep here
 
 import './adding_alarm_dialog.dart' show AddingAlarmDialog;
 
@@ -7,13 +8,19 @@ import 'package:currency_alarm/libs/flusher-animated-icon.dart'
 import 'package:currency_alarm/features/exporter.dart'
     show ActivatedAlarmOptions;
 
+import '../../../common/exporter.dart' show CurrencySignIcon;
+
 class ActiveCurrencyAlarms extends StatefulWidget {
   final bool isAlarmActive;
   final ActivatedAlarmOptions alarmOptions;
   final Future<bool> Function(double c) onAlarmSubmit;
+  final Future<void> Function() onAlarmDeactivate;
 
   ActiveCurrencyAlarms(
-      {this.onAlarmSubmit, this.alarmOptions, this.isAlarmActive});
+      {this.onAlarmSubmit,
+      this.onAlarmDeactivate,
+      this.alarmOptions,
+      this.isAlarmActive});
 
   @override
   _ActiveCurrencyAlarmsState createState() => _ActiveCurrencyAlarmsState();
@@ -29,15 +36,33 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
   }
 
   _buildAlarmListHeader() => Container(
-      margin: EdgeInsets.only(top: 40, bottom: 25),
-      child: Row(
+      margin: EdgeInsets.only(top: 35, bottom: 20),
+      child: Column(
         children: [
-          Container(
-            margin: EdgeInsets.only(right: 5),
-            child: Icon(Icons.access_time, size: 27),
+          Row(
+            children: [
+              Container(
+                margin: EdgeInsets.only(right: 5),
+                child: Icon(Icons.access_time, size: 27),
+              ),
+              Text('Active tracker'.toUpperCase(),
+                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
+            ],
           ),
-          Text('Active alarms'.toUpperCase(),
-              style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
+          widget.isAlarmActive
+              ? Container(
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[300],
+                  ),
+                  child: Flexible(
+                    flex: 0,
+                    child: Text(
+                        'Trigger a push notification when exchange rate will be closer to the specified value',
+                        style: TextStyle(fontSize: 13)),
+                  ))
+              : Container()
         ],
       ));
 
@@ -64,8 +89,63 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
     );
   }
 
+  _deactivateAlarm() {
+    widget.onAlarmDeactivate();
+  }
+
+  _buildDeleteAlarmButton() {
+    return Material(
+      color: Colors.white.withOpacity(0.0),
+      child: InkWell(
+        child: IconButton(
+          onPressed: () {
+            _deactivateAlarm();
+          },
+          enableFeedback: true,
+          icon: Icon(Icons.delete, size: 35, color: Colors.black87),
+        ),
+        onTap: () {},
+      ),
+    );
+  }
+
   _buildActiveAlarmStatistics() {
-    return FlusherAnimatedIcon();
+    final timestamp = widget.alarmOptions.activationDate;
+    final currency = widget.alarmOptions.currency.toStringAsFixed(3);
+    final toCurrency = widget.alarmOptions.to;
+    final date = DateFormat("EEE, MMM d, hh:mm:ss a").format(timestamp);
+
+    return Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.black12,
+              width: 1.0,
+            ),
+          ),
+        ),
+        child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FlusherAnimatedIcon(),
+              Column(
+                children: [
+                  Container(
+                      child: Row(children: [
+                    Text(
+                      "$currency",
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    Container(
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        child: CurrencySignIcon(name: toCurrency, size: 15)),
+                  ])),
+                  Container(child: Text("on $date"))
+                ],
+              ),
+              _buildDeleteAlarmButton(),
+            ]));
   }
 
   _buildAlarmContent() {

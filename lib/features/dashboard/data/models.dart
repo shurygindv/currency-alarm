@@ -50,24 +50,28 @@ class CurrencyRateResult {
 }
 
 class ActivatedAlarmOptions {
-  CurrencyType from;
-  CurrencyType to;
-  double currency;
+  final CurrencyType from;
+  final CurrencyType to;
+  final double currency;
+  final DateTime activationDate;
 
-  ActivatedAlarmOptions({this.from, this.to, this.currency});
+  ActivatedAlarmOptions(
+      {this.from, this.to, this.currency, this.activationDate});
 
   factory ActivatedAlarmOptions.fromJson(Map<String, dynamic> data) =>
       ActivatedAlarmOptions(
           from: CurrencyType.from[data['from'] as String],
           to: CurrencyType.from[data['to'] as String],
-          currency: (data['currency'] as double) + 0.0);
+          currency: (data['currency'] as double) + 0.0,
+          activationDate: DateTime.parse(data['activationDate'] as String));
 
   static Map<String, dynamic> toMap(
       CurrencyType from, CurrencyType to, double currency) {
     return {
       'from': describeEnum(from),
       'to': describeEnum(to),
-      'currency': describeEnum(currency),
+      'currency': currency,
+      'activationDate': DateTime.now().toIso8601String(),
     };
   }
 }

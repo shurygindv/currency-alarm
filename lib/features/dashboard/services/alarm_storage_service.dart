@@ -42,6 +42,10 @@ class AlarmStorageService {
     return result;
   }
 
+  Future<void> deactivateAlarm() async {
+    await _resetExistingAlarms();
+  }
+
   Future<ActivatedAlarmOptions> getActiveAlarmOptions() async {
     final result = await storageService.getMap(ALARM_STORAGE_KEY);
 
