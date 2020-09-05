@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:currency_alarm/ui/exporter.dart' show Loader;
 
 import './currency_switcher_control.dart' show CurrencySwitcherControl;
-
+import 'package:currency_alarm/libs/ui-effects/exporter.dart'
+    show FadeInOutUiEffect;
 import '../../../common/exporter.dart' show CurrencySignIcon, CurrencyType;
 import '../../data/models.dart' show CurrencyRateResult;
 
@@ -77,15 +78,16 @@ class CurrencyBroadcast extends StatelessWidget {
   }
 
   Widget _buildCurrencyRateDisplay() {
-    return Container(
-        margin: EdgeInsets.only(top: 30, bottom: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildCurrentRate(),
-            _buildLastRateUpdateTime(),
-          ],
-        ));
+    return FadeInOutUiEffect(
+        child: Container(
+            margin: EdgeInsets.only(top: 30, bottom: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildCurrentRate(),
+                _buildLastRateUpdateTime(),
+              ],
+            )));
   }
 
   Widget _buildLoader() => Container(

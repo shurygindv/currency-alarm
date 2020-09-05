@@ -115,13 +115,12 @@ class _DashboardViewState extends State<DashboardView> {
                 isFetching: _isRateFetching,
                 currentRate: currentRate,
                 updateTime: updateTime),
-            Expanded(
-                child: ActiveCurrencyAlarms(
+            ActiveCurrencyAlarms(
               onAlarmActivate: _activateAlarm,
               onAlarmDeactivate: _deactivateAlarm,
               isAlarmActive: alarmOptions != null,
               alarmOptions: alarmOptions,
-            ))
+            )
           ],
         ));
   }

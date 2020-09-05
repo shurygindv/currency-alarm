@@ -18,7 +18,7 @@ class FlusherAnimatedIcon extends StatelessWidget {
         [asset],
         builder: (BuildContext context, bool isWarm) {
           return !isWarm
-              ? Container(child: Text("loading..."))
+              ? Container(child: Text("wait..."))
               : FlareActor.asset(
                   asset,
                   alignment: Alignment.center,
