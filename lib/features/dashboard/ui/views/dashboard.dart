@@ -117,7 +117,7 @@ class _DashboardViewState extends State<DashboardView> {
                 updateTime: updateTime),
             Expanded(
                 child: ActiveCurrencyAlarms(
-              onAlarmSubmit: _activateAlarm,
+              onAlarmActivate: _activateAlarm,
               onAlarmDeactivate: _deactivateAlarm,
               isAlarmActive: alarmOptions != null,
               alarmOptions: alarmOptions,

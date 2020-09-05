@@ -7,6 +7,8 @@ import 'package:currency_alarm/core/exporter.dart' show AppColors;
 import 'package:currency_alarm/features/exporter.dart'
     show DashboardView, CurrencyConverter;
 
+import 'package:currency_alarm/features/exporter.dart' show AppInfoDialog;
+
 class MainScreen extends StatefulWidget {
   MainScreen({Key key}) : super(key: key);
 
@@ -22,12 +24,6 @@ class _MainScreenState extends State<MainScreen> {
     CurrencyConverter(),
   ];
 
-  final appBar = AppBar(
-      toolbarHeight: 80,
-      title: const Caption(name: 'Currency Alarm'),
-      elevation: 0.0,
-      backgroundColor: Colors.transparent);
-
   final dashboardNavItem = BottomNavigationBarItem(
       icon: Icon(Icons.dashboard), title: Text('Dashboard'));
 
@@ -38,7 +34,32 @@ class _MainScreenState extends State<MainScreen> {
     setState(() => {_selectedPanelIndex = index});
   }
 
-  Widget _buildHeader() => appBar;
+  Future<void> _showAppInfoDialog() async {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) => AppInfoDialog());
+  }
+
+  Widget _buildHeader() => AppBar(
+      toolbarHeight: 80,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Caption(name: 'Currency Alarm'),
+          IconButton(
+            icon: Icon(Icons.info),
+            enableFeedback: true,
+            color: Colors.white,
+            iconSize: 28,
+            onPressed: () {
+              _showAppInfoDialog();
+            },
+          )
+        ],
+      ),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent);
 
   Widget _buildBody() {
     final currentView = _widgetViews.elementAt(_selectedPanelIndex);

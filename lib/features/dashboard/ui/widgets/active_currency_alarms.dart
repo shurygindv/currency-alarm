@@ -13,11 +13,11 @@ import '../../../common/exporter.dart' show CurrencySignIcon;
 class ActiveCurrencyAlarms extends StatefulWidget {
   final bool isAlarmActive;
   final ActivatedAlarmOptions alarmOptions;
-  final Future<bool> Function(double c) onAlarmSubmit;
+  final Future<bool> Function(double c) onAlarmActivate;
   final Future<void> Function() onAlarmDeactivate;
 
   ActiveCurrencyAlarms(
-      {this.onAlarmSubmit,
+      {this.onAlarmActivate,
       this.onAlarmDeactivate,
       this.alarmOptions,
       this.isAlarmActive});
@@ -32,11 +32,11 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) =>
-            AddingAlarmDialog(onSubmit: widget.onAlarmSubmit));
+            AddingAlarmDialog(onSubmit: widget.onAlarmActivate));
   }
 
   _buildAlarmListHeader() => Container(
-      margin: EdgeInsets.only(top: 35, bottom: 20),
+      margin: EdgeInsets.only(top: 35, bottom: 10),
       child: Column(
         children: [
           Row(
@@ -54,12 +54,12 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey[300],
+                    color: Colors.grey[200],
                   ),
                   child: Flexible(
                     flex: 0,
                     child: Text(
-                        'Trigger a push notification when exchange rate will be closer to the specified value',
+                        'Push you when exchange rate will be (greater a little bit, equal) to specified value',
                         style: TextStyle(fontSize: 13)),
                   ))
               : Container()
@@ -68,6 +68,8 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
 
   Widget _buildAddingCurrencyAlarmButton() {
     return Center(
+        child: Container(
+      margin: EdgeInsets.only(top: 5),
       child: RaisedButton(
         color: Colors.amber[400],
         textColor: Colors.black54,
@@ -86,7 +88,7 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
           _showAddingAlarmDialog();
         },
       ),
-    );
+    ));
   }
 
   _deactivateAlarm() {
