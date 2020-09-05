@@ -33,11 +33,17 @@ class AppInfoDialog extends StatelessWidget {
     body: 'Hi!',
   );
 
+  final rateUpdate = const InfoText(
+    whatIs: 'Rate update',
+    clarify: 'every 1-2 hours',
+  );
+
   final Widget thankYouAlot = const Text('Thank you');
 
   _buildDialogContent() {
     return Column(children: [
       appVersion,
+      rateUpdate,
       Container(
           child: appreciation, margin: EdgeInsets.only(top: 15, bottom: 10)),
       mailToLink,

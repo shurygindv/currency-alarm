@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:currency_alarm/application.dart' show AppStore;
+import 'package:currency_alarm/features/exporter.dart'
+    show AlarmStorageService, ActivatedAlarmOptions;
+import 'package:currency_alarm/application.dart' show injectDependency;
 
 import '../widgets/currency_broadcast.dart' show CurrencyBroadcast;
 import '../widgets/active_currency_alarms.dart' show ActiveCurrencyAlarms;
 import '../../../common/exporter.dart' show CurrencyType;
-
-import 'package:currency_alarm/features/exporter.dart'
-    show AlarmStorageService, ActivatedAlarmOptions;
-import 'package:currency_alarm/application.dart' show injectDependency;
 
 class DashboardView extends StatefulWidget {
   @override
@@ -97,9 +96,6 @@ class _DashboardViewState extends State<DashboardView> {
 
   @override
   Widget build(BuildContext context) {
-    final updateTime = context.watch<AppStore>().updateTime;
-    final currentRate = context.watch<AppStore>().rate;
-
     return Container(
         margin: EdgeInsets.only(left: 10, right: 10),
         child: Column(
@@ -108,13 +104,12 @@ class _DashboardViewState extends State<DashboardView> {
           children: [
             // todo: rework
             CurrencyBroadcast(
-                fromCurrencyValue: _fromCurrencyValue,
-                toCurrencyValue: _toCurrencyValue,
-                onFromChanges: _handleFromChanges,
-                onToChanges: _handleToChanges,
-                isFetching: _isRateFetching,
-                currentRate: currentRate,
-                updateTime: updateTime),
+              fromCurrencyValue: _fromCurrencyValue,
+              toCurrencyValue: _toCurrencyValue,
+              onFromChanges: _handleFromChanges,
+              onToChanges: _handleToChanges,
+              isFetching: _isRateFetching,
+            ),
             ActiveCurrencyAlarms(
               onAlarmActivate: _activateAlarm,
               onAlarmDeactivate: _deactivateAlarm,

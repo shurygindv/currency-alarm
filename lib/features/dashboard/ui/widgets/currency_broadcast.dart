@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:currency_alarm/ui/exporter.dart' show Loader;
-
-import './currency_switcher_control.dart' show CurrencySwitcherControl;
+import 'package:currency_alarm/application.dart' show AppStore;
 import 'package:currency_alarm/libs/ui-effects/exporter.dart'
     show FadeInOutUiEffect;
+
+import './currency_switcher_control.dart' show CurrencySwitcherControl;
 import '../../../common/exporter.dart' show CurrencySignIcon, CurrencyType;
 import '../../data/models.dart' show CurrencyRateResult;
 
@@ -19,35 +21,28 @@ class CurrencyBroadcast extends StatelessWidget {
   CurrencyChangeFn onFromChanges;
   CurrencyChangeFn onToChanges;
 
-  String updateTime;
-  CurrencyRateResult currentRate;
-
   CurrencyBroadcast({
     this.fromCurrencyValue,
     this.toCurrencyValue,
     this.onFromChanges,
     this.onToChanges,
     this.isFetching,
-    this.updateTime,
-    this.currentRate,
   });
 
-  _getCurrentCurrencyNumber() {
+  _getCurrentCurrency(CurrencyRateResult rate) {
     switch (fromCurrencyValue) {
       case CurrencyType.USD:
-        return currentRate.getUSDRateIn(toCurrencyValue);
+        return rate.getUSDRateIn(toCurrencyValue);
       case CurrencyType.EUR:
-        return currentRate.getEURRateIn(toCurrencyValue);
+        return rate.getEURRateIn(toCurrencyValue);
       case CurrencyType.RUB:
-        return currentRate.getRUBRateIn(toCurrencyValue);
+        return rate.getRUBRateIn(toCurrencyValue);
       default:
         throw new Exception('currency_broadcast: unknown _fromCurrencyValue');
     }
   }
 
-  Widget _buildCurrentRate() {
-    final value = _getCurrentCurrencyNumber();
-
+  Widget _buildCurrentRate(String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,7 +59,7 @@ class CurrencyBroadcast extends StatelessWidget {
     );
   }
 
-  Widget _buildLastRateUpdateTime() {
+  Widget _buildLastRateUpdateTime(String updateTime) {
     return Column(
       children: [
         Container(
@@ -79,15 +74,20 @@ class CurrencyBroadcast extends StatelessWidget {
 
   Widget _buildCurrencyRateDisplay() {
     return FadeInOutUiEffect(
-        child: Container(
-            margin: EdgeInsets.only(top: 30, bottom: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildCurrentRate(),
-                _buildLastRateUpdateTime(),
-              ],
-            )));
+        child: Consumer<AppStore>(builder: (_, appStore, __) {
+      final updateTime = appStore.updateTime;
+      final rate = appStore.rate;
+
+      return Container(
+          margin: EdgeInsets.only(top: 30, bottom: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildCurrentRate(_getCurrentCurrency(rate)),
+              _buildLastRateUpdateTime(updateTime),
+            ],
+          ));
+    }));
   }
 
   Widget _buildLoader() => Container(
