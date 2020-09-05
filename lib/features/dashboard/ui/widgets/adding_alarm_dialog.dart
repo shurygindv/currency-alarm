@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/exporter.dart' show CurrencyType;
+import './currency_text.dart' show CurrencyText;
+
 class Counter extends StatelessWidget {
   final double value;
 
@@ -47,22 +50,21 @@ class Counter extends StatelessWidget {
 
 class AddingAlarmDialog extends StatefulWidget {
   final double currencyNumber;
+  final CurrencyType from;
+  final CurrencyType to;
   final Future<bool> Function(double c) onSubmit;
 
-  AddingAlarmDialog({this.currencyNumber = 71.42, this.onSubmit});
+  AddingAlarmDialog(
+      {this.from, this.to, this.currencyNumber = 71.228, this.onSubmit});
 
   @override
-  _AddingAlarmDialogState createState() => _AddingAlarmDialogState(
-        onSubmit: onSubmit,
-      );
+  _AddingAlarmDialogState createState() => _AddingAlarmDialogState();
 }
 
 class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
   double currencyValue;
 
-  Future<bool> Function(double c) onSubmit;
-
-  _AddingAlarmDialogState({this.onSubmit});
+  _AddingAlarmDialogState();
 
   void setCurrency(double v) {
     setState(() {
@@ -89,30 +91,62 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
     setCurrency(currencyValue - 0.1);
   }
 
+  // todo: enum
+  String _getCurrencyText(CurrencyType t) {
+    switch (t) {
+      case CurrencyType.EUR:
+        return 'EUR';
+      case CurrencyType.RUB:
+        return 'RUB';
+      case CurrencyType.USD:
+        return 'USD';
+      default:
+        return '';
+    }
+  }
+
+  Widget _buildDescription() {
+    final from = _getCurrencyText(widget.from);
+    final to = _getCurrencyText(widget.to);
+
+    final result = "1 $from will equal about $to";
+
+    return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text(result)]);
+  }
+
+  Widget _buildCounter() {
+    return Container(
+        margin: EdgeInsets.only(top: 10),
+        child: Counter(
+            value: currencyValue,
+            onIncrement: _handleIncremening,
+            onDecrement: _handleDecremeting));
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      title: Text("Trigger when"),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       content: SingleChildScrollView(
           child: Container(
-              child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
         children: [
-          Counter(
-              value: currencyValue,
-              onIncrement: _handleIncremening,
-              onDecrement: _handleDecremeting)
+          _buildDescription(),
+          _buildCounter(),
         ],
-      ))
-          //=
-          ),
+      ))),
       actions: <Widget>[
         FlatButton(
           child: Text('Notify me'),
           onPressed: () {
-            onSubmit(currencyValue)
+            widget
+                .onSubmit(currencyValue)
                 .whenComplete(() => Navigator.of(context).pop());
           },
         ),

@@ -3,20 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:currency_alarm/features/exporter.dart'
     show ActivatedAlarmOptions;
 
+import '../../../common/exporter.dart' show CurrencyType;
 import './adding_alarm_dialog.dart' show AddingAlarmDialog;
 import './active_alarm_statistics.dart' show ActiveAlarmStatistics;
 
 class ActiveCurrencyAlarms extends StatefulWidget {
   final bool isAlarmActive;
+
+  final CurrencyType fromCurrencySwitcher;
+  final CurrencyType toCurrencySwitcher;
   final ActivatedAlarmOptions alarmOptions;
   final Future<bool> Function(double c) onAlarmActivate;
   final Future<void> Function() onAlarmDeactivate;
 
-  ActiveCurrencyAlarms(
-      {this.onAlarmActivate,
-      this.onAlarmDeactivate,
-      this.alarmOptions,
-      this.isAlarmActive});
+  ActiveCurrencyAlarms({
+    this.onAlarmActivate,
+    this.onAlarmDeactivate,
+    this.alarmOptions,
+    this.isAlarmActive,
+    this.fromCurrencySwitcher,
+    this.toCurrencySwitcher,
+  });
 
   @override
   _ActiveCurrencyAlarmsState createState() => _ActiveCurrencyAlarmsState();
@@ -27,8 +34,10 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
     return showDialog<void>(
         context: context,
         barrierDismissible: true,
-        builder: (BuildContext context) =>
-            AddingAlarmDialog(onSubmit: widget.onAlarmActivate));
+        builder: (BuildContext context) => AddingAlarmDialog(
+            to: widget.toCurrencySwitcher,
+            from: widget.fromCurrencySwitcher,
+            onSubmit: widget.onAlarmActivate));
   }
 
   _buildTitle() => Row(
@@ -51,7 +60,7 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
           color: Colors.grey[200],
         ),
         child: Text(
-            'Push you when exchange rate will be (greater a little bit, equal) to specified value',
+            'Push you when exchange rate will be about the same again (probably, time to sell!)',
             style: TextStyle(fontSize: 13)),
       ));
 

@@ -26,10 +26,10 @@ class AppInfoDialog extends StatelessWidget {
   final Widget appreciation = const InfoText(
       jumpToIdea: true,
       clarify:
-          'I appreciate everybody for any ideas (to implement smth) or enhancement existing solutions (this app), please, knock me by email: ');
+          'I appreciate everybody for any ideas (to implement smth) or enhancement existing solutions (this app), please, knock by email: ');
 
   final Widget mailToLink = const MailtoStaticLink(
-    subject: '[CurrencyAlarm] There is a proposoal',
+    subject: '[CurrencyAlarm] There is a proposal',
     body: 'Hi!',
   );
 

@@ -15,7 +15,7 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
-  bool _isRateFetching = false;
+  bool _isRateFetching = true;
   CurrencyType _fromCurrencyValue = CurrencyType.USD;
   CurrencyType _toCurrencyValue = CurrencyType.RUB;
 
@@ -115,6 +115,8 @@ class _DashboardViewState extends State<DashboardView> {
               onAlarmDeactivate: _deactivateAlarm,
               isAlarmActive: alarmOptions != null,
               alarmOptions: alarmOptions,
+              fromCurrencySwitcher: _fromCurrencyValue,
+              toCurrencySwitcher: _toCurrencyValue,
             )
           ],
         ));
