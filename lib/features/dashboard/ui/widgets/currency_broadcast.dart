@@ -13,13 +13,13 @@ import '../../data/models.dart' show CurrencyRateResult;
 typedef CurrencyChangeFn = void Function(CurrencyType t);
 
 class CurrencyBroadcast extends StatelessWidget {
-  bool isFetching = false;
+  final bool isFetching;
 
-  CurrencyType fromCurrencyValue;
-  CurrencyType toCurrencyValue;
+  final CurrencyType fromCurrencyValue;
+  final CurrencyType toCurrencyValue;
 
-  CurrencyChangeFn onFromChanges;
-  CurrencyChangeFn onToChanges;
+  final CurrencyChangeFn onFromChanges;
+  final CurrencyChangeFn onToChanges;
 
   CurrencyBroadcast({
     this.fromCurrencyValue,
