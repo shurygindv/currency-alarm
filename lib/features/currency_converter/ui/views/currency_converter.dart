@@ -15,6 +15,7 @@ import '../../../common/exporter.dart' show CurrencySignIcon;
 
 final _debouncer = Debouncer(delay: Duration(milliseconds: 300));
 
+// TODO: rework full: ux, test version
 class CurrencyConverter extends StatefulWidget {
   @override
   _CurrencyConverterState createState() => _CurrencyConverterState();
@@ -177,6 +178,26 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
     );
   }
 
+  _handleBuyRadioInputChanges(CurrencyType v) {
+    setState(() {
+      _buyCurrencyType = v;
+    });
+
+    if (buyInput.text != "") {
+      _handleBuyInputChanges(buyInput.text);
+    }
+  }
+
+  _handleSellRadioInputChanges(CurrencyType v) {
+    setState(() {
+      _sellCurrencytype = v;
+    });
+
+    if (buyInput.text != "") {
+      _handleBuyInputChanges(buyInput.text);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -220,37 +241,25 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Expanded(
                   child: RadioListTile(
-                title: const Text('USD'),
+                title: const Text('USD', style: TextStyle(fontSize: 13)),
                 value: CurrencyType.USD,
                 groupValue: _buyCurrencyType,
-                onChanged: (CurrencyType v) {
-                  setState(() {
-                    _buyCurrencyType = v;
-                  });
-                },
+                onChanged: _handleBuyRadioInputChanges,
               )),
               Expanded(
                   child: RadioListTile(
-                title: const Text('RUB'),
+                title: const Text('RUB', style: TextStyle(fontSize: 13)),
                 value: CurrencyType.RUB,
                 groupValue: _buyCurrencyType,
-                onChanged: (CurrencyType v) {
-                  setState(() {
-                    _buyCurrencyType = v;
-                  });
-                },
+                onChanged: _handleBuyRadioInputChanges,
               )),
               //=
               Expanded(
                   child: RadioListTile(
-                title: const Text('EUR'),
+                title: const Text('EUR', style: TextStyle(fontSize: 13)),
                 value: CurrencyType.EUR,
                 groupValue: _buyCurrencyType,
-                onChanged: (CurrencyType v) {
-                  setState(() {
-                    _buyCurrencyType = v;
-                  });
-                },
+                onChanged: _handleBuyRadioInputChanges,
               ))
             ]),
 
@@ -263,37 +272,25 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
             Row(mainAxisSize: MainAxisSize.min, children: [
               Expanded(
                   child: RadioListTile(
-                title: const Text('USD'),
+                title: const Text('USD', style: TextStyle(fontSize: 13)),
                 value: CurrencyType.USD,
                 groupValue: _sellCurrencytype,
-                onChanged: (CurrencyType v) {
-                  setState(() {
-                    _sellCurrencytype = v;
-                  });
-                },
+                onChanged: _handleSellRadioInputChanges,
               )),
               Expanded(
                   child: RadioListTile(
-                title: const Text('RUB'),
+                title: const Text('RUB', style: TextStyle(fontSize: 13)),
                 value: CurrencyType.RUB,
                 groupValue: _sellCurrencytype,
-                onChanged: (CurrencyType v) {
-                  setState(() {
-                    _sellCurrencytype = v;
-                  });
-                },
+                onChanged: _handleSellRadioInputChanges,
               )),
               //=
               Expanded(
                   child: RadioListTile(
-                title: const Text('EUR'),
+                title: const Text('EUR', style: TextStyle(fontSize: 13)),
                 value: CurrencyType.EUR,
                 groupValue: _sellCurrencytype,
-                onChanged: (CurrencyType v) {
-                  setState(() {
-                    _sellCurrencytype = v;
-                  });
-                },
+                onChanged: _handleSellRadioInputChanges,
               ))
             ])
           ]),

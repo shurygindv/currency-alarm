@@ -20,7 +20,7 @@ T injectDependency<T>() {
   return GetIt.instance.get<T>();
 }
 
-// todo: rework
+// todo: rework, rethink this file
 class AppStore extends ChangeNotifier {
   static AppStore getProvider(ctx) => Provider.of<AppStore>(ctx, listen: false);
 
