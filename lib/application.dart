@@ -1,14 +1,24 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/material.dart'
+    show
+        Center,
+        State,
+        Widget,
+        ThemeData,
+        MaterialApp,
+        BuildContext,
+        FutureBuilder,
+        ChangeNotifier,
+        StatefulWidget;
+
+import 'package:provider/provider.dart' show Provider, ChangeNotifierProvider;
+
 import 'package:easy_localization/easy_localization.dart';
-import 'package:get_it/get_it.dart';
+import 'package:get_it/get_it.dart' show GetIt;
 
-import 'package:currency_alarm/screens/main.dart';
-
+import './ui/exporter.dart' show Loader;
+import './screens/main.dart' show MainScreen;
 import './features/bootstrap.dart' as features;
-import 'package:currency_alarm/features/exporter.dart'
+import './features/exporter.dart'
     show
         CurrencyRateResult,
         CurrencyRateService,
@@ -78,26 +88,33 @@ class _ApplicationState extends State<Application> {
     features.setup();
   }
 
+  Widget _buildMainScreen() => MainScreen();
+
+  Widget _buildLoader() => Center(
+        child: Loader(name: 'ripple'),
+      );
+
+  Future<void> waitAppDependencies() => GetIt.I.allReady();
+
   Widget _buildApp() => MaterialApp(
       title: _title,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       theme: ThemeData(fontFamily: 'Rubik'),
-      home: MainScreen());
+      home: FutureBuilder(
+          future: waitAppDependencies(), // todo: connector wrapper
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return _buildMainScreen();
+            }
+
+            return _buildLoader();
+          }));
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (_) => AppStore(),
-        child: FutureBuilder(
-            future: GetIt.I.allReady(), // todo: loader, connector wrapper
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return _buildApp();
-              }
-
-              return Container();
-            }));
+        create: (_) => AppStore(), child: _buildApp());
   }
 }
