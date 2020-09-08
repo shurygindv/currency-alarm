@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:currency_alarm/screens/main.dart';
@@ -79,24 +79,26 @@ class _ApplicationState extends State<Application> {
     features.setup();
   }
 
-  Widget _buildApp() => FutureBuilder(
-      future: GetIt.I.allReady(), // todo: loader, connector wrapper
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return MaterialApp(
-              title: _title,
-              theme: ThemeData(fontFamily: 'Rubik'),
-              home: MainScreen());
-        }
-
-        return Container();
-      });
+  Widget _buildApp() => MaterialApp(
+      title: _title,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      theme: ThemeData(fontFamily: 'Rubik'),
+      home: MainScreen());
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AppStore(),
-      child: _buildApp(),
-    );
+        create: (_) => AppStore(),
+        child: FutureBuilder(
+            future: GetIt.I.allReady(), // todo: loader, connector wrapper
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return _buildApp();
+              }
+
+              return Container();
+            }));
   }
 }
