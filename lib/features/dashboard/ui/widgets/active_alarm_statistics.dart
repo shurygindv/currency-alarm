@@ -44,32 +44,35 @@ class _ActiveAlarmStatisticsState extends State<ActiveAlarmStatistics> {
     );
   }
 
-  Widget _buildRowInfo() {
+  _buildAlarmDetails() {
     final timestamp = widget.activationDate;
     final currency = widget.currencyValue.toStringAsFixed(3);
     final toCurrency = widget.toCurrency;
     final date = DateFormat("EEE, MMM d, hh:mm:ss a").format(timestamp);
 
+    return Column(
+      children: [
+        Row(children: [
+          Text(
+            "$currency",
+            style: TextStyle(fontSize: 25),
+          ),
+          Container(
+              margin: EdgeInsets.symmetric(horizontal: 5),
+              child: CurrencySignIcon(name: toCurrency, size: 15)),
+        ]),
+        Text("$date"),
+      ],
+    );
+  }
+
+  Widget _buildRowInfo() {
     return Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           FlusherAnimatedIcon(),
-          Column(
-            children: [
-              Container(
-                  child: Row(children: [
-                Text(
-                  "$currency",
-                  style: TextStyle(fontSize: 25),
-                ),
-                Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5),
-                    child: CurrencySignIcon(name: toCurrency, size: 15)),
-              ])),
-              Text("on $date")
-            ],
-          ),
+          _buildAlarmDetails(),
           _buildDeleteAlarmButton(),
         ]);
   }

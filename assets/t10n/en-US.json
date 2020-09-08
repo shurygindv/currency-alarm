@@ -1,12 +1,13 @@
 {
     "dashboard.name": "Rating",
-    "dashboard.notify": "Notify when",
+    "dashboard.notify": "Notify",
     "dashboard.addAlarm": "Add currency alarm",
     "dashboard.activeTracker": "ACTIVE TRACKER",
     "dashboard.rateUpdate": "last updated on {date}",
-    "dashboard.notifyDescription": "value will approximately equal",
+    "dashboard.notifyWhen": "when value will approximately equal",
     "dashboard.currencyReminder": "Push you when the exchange rate is back again (probably, time to sell!)",
     "dashboard.currencyEquals": "≈ in",
+    "dashboard.valuesTip": "*values according to dashboard",
 
     "converter.name": "Converver",
     "converter.buy": "Buy currency",

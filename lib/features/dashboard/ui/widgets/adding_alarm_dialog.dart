@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,14 +30,14 @@ class Counter extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.only(left: 10, right: 5),
-      child: Text('$v', style: TextStyle(fontSize: 25)),
+      child: Text('$v', style: TextStyle(fontSize: 35)),
     );
   }
 
   Widget _buildSignIcon() {
     return Container(
       margin: EdgeInsets.only(right: 10),
-      child: CurrencySignIcon(name: type, size: 20),
+      child: CurrencySignIcon(name: type, size: 17),
     );
   }
 
@@ -153,7 +154,7 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
       ),
       child: Text(v, style: TextStyle(fontSize: 10, color: Colors.black54)));
 
-  Widget _buildDescription() {
+  Widget _buildCurrencyEq() {
     final from = _getCurrencyText(widget.from);
     final to = _getCurrencyText(widget.to);
 
@@ -169,6 +170,7 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
 
   Widget _buildCounter() {
     return Container(
+        margin: EdgeInsets.only(top: 15),
         child: Counter(
             type: widget.to,
             value: currencyValue,
@@ -176,24 +178,30 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
             onDecrement: _handleDecremeting));
   }
 
+  _buildInfoTip() => Container(
+      child: IntlText('dashboard.valuesTip',
+          style: TextStyle(fontSize: 10, color: Colors.black45)));
+
   Widget _buildDialogContent() => Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          _buildInfoTip(),
+          _buildCurrencyEq(),
           _buildCounter(),
-          _buildDescription(),
         ],
       );
+
+  Widget _buildDialogTitle() =>
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        IntlText("dashboard.notify"),
+        IntlText("dashboard.notifyWhen",
+            style: TextStyle(fontSize: 12, color: Colors.black45)),
+      ]);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          IntlText("dashboard.notify"),
-          IntlText("dashboard.notifyDescription",
-              style: TextStyle(fontSize: 14, color: Colors.black45)),
-        ],
-      ),
+      title: _buildDialogTitle(),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),

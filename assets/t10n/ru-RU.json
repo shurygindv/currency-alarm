@@ -1,12 +1,13 @@
 {
   "dashboard.name": "Панель",
-  "dashboard.notify": "Уведомить, когда",
+  "dashboard.notify": "Уведомить",
   "dashboard.addAlarm": "Добавить валютный трекер",
   "dashboard.activeTracker": "Активный трекер",
   "dashboard.rateUpdate": "обновлен {date}",
-  "dashboard.notifyDescription": "валюта будет приблизительно",
-  "dashboard.currencyReminder": "Уведомит, когда курс станет прежним (возможно, время продавать!)",
+  "dashboard.notifyWhen": "когда валюта будет приблизительно",
+  "dashboard.currencyReminder": "Уведомит, когда курс приблизиться к указанному значению",
   "dashboard.currencyEquals": "≈ в",
+  "dashboard.valuesTip": "*согласно главному экрану",
 
   "converter.name": "Конвертер",
   "converter.buy": "Купить валюту",
