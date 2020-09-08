@@ -8,6 +8,7 @@ import 'package:currency_alarm/features/exporter.dart'
     show DashboardView, CurrencyConverter;
 
 import 'package:currency_alarm/features/exporter.dart' show AppInfoDialog;
+import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText;
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key key}) : super(key: key);
@@ -25,10 +26,10 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   final dashboardNavItem = BottomNavigationBarItem(
-      icon: Icon(Icons.dashboard), title: Text('Dashboard'));
+      icon: Icon(Icons.dashboard), title: IntlText('dashboard.name'));
 
   final converterNavItem = BottomNavigationBarItem(
-      icon: Icon(Icons.assessment), title: Text('Converter'));
+      icon: Icon(Icons.assessment), title: IntlText('converter.name'));
 
   void _onItemTapped(int index) {
     setState(() => {_selectedPanelIndex = index});

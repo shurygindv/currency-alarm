@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
+import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText;
 import 'package:currency_alarm/ui/exporter.dart' show Loader;
 import 'package:currency_alarm/application.dart' show AppStore;
 import 'package:currency_alarm/libs/ui-effects/exporter.dart'
@@ -63,8 +65,9 @@ class CurrencyBroadcast extends StatelessWidget {
     return Column(
       children: [
         Container(
-          child: Text(
-            "last updated on $updateTime",
+          child: IntlText(
+            "dashboard.rateUpdate",
+            namedArgs: {'date': updateTime},
             style: TextStyle(fontSize: 12, color: Colors.black54),
           ),
         )
@@ -72,11 +75,23 @@ class CurrencyBroadcast extends StatelessWidget {
     );
   }
 
+  // todo: enum
+  String getDtPattern(String locale) {
+    if (locale == 'ru_RU') {
+      return "d MMMM, HH:MM:ss";
+    }
+
+    return "d MMMM, hh:mm a";
+  }
+
   Widget _buildCurrencyRateDisplay() {
     return FadeInOutUiEffect(
-        child: Consumer<AppStore>(builder: (_, appStore, __) {
+        child: Consumer<AppStore>(builder: (ctx, appStore, __) {
       final updateTime = appStore.updateTime;
       final rate = appStore.rate;
+
+      final timestamp =
+          DateFormat(getDtPattern(ctx.locale.toString())).format(updateTime);
 
       return Container(
           margin: EdgeInsets.only(top: 30, bottom: 20),
@@ -84,7 +99,7 @@ class CurrencyBroadcast extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildCurrentRate(_getCurrentCurrency(rate)),
-              _buildLastRateUpdateTime(updateTime),
+              _buildLastRateUpdateTime(timestamp),
             ],
           ));
     }));

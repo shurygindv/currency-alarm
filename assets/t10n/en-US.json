@@ -1,0 +1,27 @@
+{
+    "dashboard.name": "Rating",
+    "dashboard.notify": "Notify when",
+    "dashboard.addAlarm": "Add currency alarm",
+    "dashboard.activeTracker": "ACTIVE TRACKER",
+    "dashboard.rateUpdate": "last updated on {date}",
+    "dashboard.notifyDescription": "value will approximately equal",
+    "dashboard.currencyReminder": "Push you when the exchange rate is back again (probably, time to sell!)",
+    "dashboard.currencyEquals": "≈ in",
+
+    "converter.name": "Converver",
+    "converter.buy": "Buy currency",
+    "converter.buyLabel": "Buy (from)",
+    "converter.sell": "Sell currency",
+    "converter.sellLabel": "Sell (to)",
+  
+    "dialog.apply": "Apply",
+    "dialog.cancel": "Cancel",
+    "dialog.close": "Close",
+    "dialog.notify": "Notify",
+  
+    "about.name": "About",
+    "about.appVersion": "App version: {ver}",
+    "about.howOftenRateUpdate": "Rate updates: every <one hour",
+    "about.thankYou": "\tI appreciate everybody for any ideas (to implement smth) or enhancement existing solutions (like this app), please, let me know. Knock by email:"
+  }
+  

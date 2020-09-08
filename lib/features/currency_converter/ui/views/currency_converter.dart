@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'package:currency_alarm/libs/debouncer.dart';
 import 'package:currency_alarm/application.dart' show AppStore;
+import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText, t;
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -15,7 +16,7 @@ import '../../../common/exporter.dart' show CurrencySignIcon;
 
 final _debouncer = Debouncer(delay: Duration(milliseconds: 300));
 
-// TODO: rework full: ux, test version
+// TODO: !!rework!!: code, ux, test version
 class CurrencyConverter extends StatefulWidget {
   @override
   _CurrencyConverterState createState() => _CurrencyConverterState();
@@ -214,7 +215,7 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                 icon: CurrencySignIcon(name: _buyCurrencyType, size: 20),
                 border: OutlineInputBorder(),
                 suffixIcon: _isBuyFetching ? _buildRingLoader() : null,
-                labelText: 'Buy (from)'),
+                labelText: t("converter.buyLabel")),
           ),
         ),
         Container(
@@ -228,14 +229,14 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
                 icon: CurrencySignIcon(name: _sellCurrencytype, size: 20),
                 border: OutlineInputBorder(),
                 suffixIcon: _isSellFetching ? _buildRingLoader() : null,
-                labelText: 'Sell (to)'),
+                labelText: t("converter.sellLabel")),
           ),
         ),
         Container(
           margin: EdgeInsets.only(top: 20),
           child: Column(children: [
-            const Text(
-              'Buy currency',
+            const IntlText(
+              'converter.buy',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -265,8 +266,8 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
 
             // ===
 
-            const Text(
-              'Sell currency',
+            const IntlText(
+              'converter.sell',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
             ),
             Row(mainAxisSize: MainAxisSize.min, children: [

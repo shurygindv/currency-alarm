@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:currency_alarm/application.dart' show AppStore;
+import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText;
 
 import '../../../common/exporter.dart' show CurrencyType;
 import './currency_text.dart' show CurrencyText;
@@ -150,7 +151,7 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
         borderRadius: BorderRadius.circular(10),
         color: Colors.grey[100],
       ),
-      child: Text(v, style: TextStyle(color: Colors.black54)));
+      child: Text(v, style: TextStyle(fontSize: 10, color: Colors.black54)));
 
   Widget _buildDescription() {
     final from = _getCurrencyText(widget.from);
@@ -161,15 +162,13 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _buildBadge("1 $from"),
-          Container(
-              child: Text("will equal about", style: TextStyle(fontSize: 16))),
+          IntlText("dashboard.currencyEquals", style: TextStyle(fontSize: 15)),
           _buildBadge("$to"),
         ]);
   }
 
   Widget _buildCounter() {
     return Container(
-        margin: EdgeInsets.only(top: 10),
         child: Counter(
             type: widget.to,
             value: currencyValue,
@@ -179,15 +178,22 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
 
   Widget _buildDialogContent() => Column(
         children: [
-          _buildDescription(),
           _buildCounter(),
+          _buildDescription(),
         ],
       );
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Trigger when"),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IntlText("dashboard.notify"),
+          IntlText("dashboard.notifyDescription",
+              style: TextStyle(fontSize: 14, color: Colors.black45)),
+        ],
+      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -195,10 +201,10 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
       actions: <Widget>[
         FlatButton(
           onPressed: () => Navigator.pop(context, false), // passing false
-          child: Text('Close'),
+          child: IntlText('dialog.cancel'),
         ),
         FlatButton(
-          child: Text('Set'),
+          child: IntlText('dialog.notify'),
           onPressed: () {
             widget
                 .onSubmit(currencyValue)

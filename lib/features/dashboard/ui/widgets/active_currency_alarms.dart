@@ -7,6 +7,8 @@ import '../../../common/exporter.dart' show CurrencyType;
 import './adding_alarm_dialog.dart' show AddingAlarmDialog;
 import './active_alarm_statistics.dart' show ActiveAlarmStatistics;
 
+import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText;
+
 class ActiveCurrencyAlarms extends StatefulWidget {
   final bool isAlarmActive;
 
@@ -46,7 +48,7 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
             margin: EdgeInsets.only(right: 5),
             child: Icon(Icons.access_time, size: 27),
           ),
-          Text('Active tracker'.toUpperCase(),
+          IntlText('dashboard.activeTracker',
               style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
         ],
       );
@@ -59,8 +61,7 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
           borderRadius: BorderRadius.circular(10),
           color: Colors.grey[200],
         ),
-        child: Text(
-            'Push you when exchange rate will be about the same again (probably, time to sell!)',
+        child: IntlText('dashboard.currencyReminder',
             style: TextStyle(fontSize: 13)),
       ));
 
@@ -84,10 +85,10 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-                height: 65,
-                margin: EdgeInsets.only(right: 10),
+                height: 60,
+                margin: EdgeInsets.only(right: 5),
                 child: Icon(Icons.add, size: 26)),
-            Text("Add currency alarm", style: TextStyle(fontSize: 16))
+            IntlText("dashboard.addAlarm", style: TextStyle(fontSize: 16))
           ],
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

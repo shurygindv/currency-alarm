@@ -1,0 +1,26 @@
+{
+  "dashboard.name": "Рейтинг",
+  "dashboard.notify": "Уведомить, когда",
+  "dashboard.addAlarm": "Добавить валютный трекер",
+  "dashboard.activeTracker": "Активный трекер",
+  "dashboard.rateUpdate": "обновлен {date}",
+  "dashboard.notifyDescription": "валюта будет приблизительно",
+  "dashboard.currencyReminder": "Уведомит, когда курс станет прежним (возможно, время продавать!)",
+  "dashboard.currencyEquals": "≈ в",
+
+  "converter.name": "Конвертер",
+  "converter.buy": "Купить валюту",
+  "converter.buyLabel": "Купить (из)",
+  "converter.sell": "Продать валюту",
+  "converter.sellLabel": "Продать (в)",
+
+  "dialog.apply": "Применить",
+  "dialog.cancel": "Отменить",
+  "dialog.close": "Закрыть",
+  "dialog.notify": "Уведомить",
+
+  "about.name": "О приложении",
+  "about.appVersion": "Версия: {ver}",
+  "about.howOftenRateUpdate": "Обновления курса: каждый <час",
+  "about.thankYou": "\t\tЕсли вы располагаете идеей для разработки, но затрудняетесь с её воплощением, будем рады вам помочь. Мы благодарны за любые побуждения к действию или совершенствованию существующих решений, пожалуйста, напишите на email"
+}

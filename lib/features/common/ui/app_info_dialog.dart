@@ -1,42 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:currency_alarm/ui/exporter.dart' show MailtoStaticLink;
 
-class InfoText extends StatelessWidget {
-  final String whatIs;
-  final String clarify;
-  final bool jumpToIdea;
-
-  const InfoText({this.whatIs, this.clarify, this.jumpToIdea = false});
-
-  @override
-  Widget build(BuildContext context) {
-    if (jumpToIdea) {
-      return Text(clarify);
-    }
-
-    return Row(
-        children: [Text("$whatIs: "), Flexible(child: Text("$clarify"))]);
-  }
-}
+import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText;
 
 class AppInfoDialog extends StatelessWidget {
-  final InfoText appVersion =
-      const InfoText(whatIs: 'App version', clarify: "v1.01");
+  final IntlText appVersion = const IntlText(
+    'about.appVersion',
+    namedArgs: {"ver": 'v1.1'},
+  );
 
-  final Widget appreciation = const InfoText(
-      jumpToIdea: true,
-      clarify:
-          'I appreciate everybody for any ideas (to implement smth) or enhancement existing solutions (this app), please, knock by email: ');
+  final Widget appreciation = const IntlText('about.thankYou');
 
   final Widget mailToLink = const MailtoStaticLink(
     subject: '[CurrencyAlarm] There is a proposal',
     body: 'Hi!',
   );
 
-  final rateUpdate = const InfoText(
-    whatIs: 'Rate update',
-    clarify: 'every 1-2 hours',
-  );
+  final rateUpdate = const IntlText("about.howOftenRateUpdate");
 
   final Widget thankYouAlot = const Text('Thank you');
 
@@ -53,7 +33,7 @@ class AppInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('About'),
+      title: IntlText('about.name'),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -63,7 +43,7 @@ class AppInfoDialog extends StatelessWidget {
       )),
       actions: <Widget>[
         FlatButton(
-            child: Text('Close'),
+            child: IntlText('dialog.close'),
             onPressed: () {
               Navigator.of(context).pop();
             }),
