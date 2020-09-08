@@ -30,15 +30,15 @@ class AlarmNotificationService {
 
   Future<void> showNotification({String title, String body}) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your channel id', 'your channel name', 'your channel description',
+        'channel id', 'channel name', 'channel description',
         importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
 
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-    await flutterNotificationPlugin
-        .show(0, title, body, platformChannelSpecifics, payload: 'item x');
+    await flutterNotificationPlugin.show(
+        0, title, body, platformChannelSpecifics);
   }
 
   Future<void> cancelAll() async {

@@ -1,6 +1,7 @@
 import 'package:currency_alarm/features/dashboard/data/models.dart';
 import 'package:currency_alarm/libs/background_task.dart' show BackgroundTask;
 import 'package:currency_alarm/application.dart' show injectDependency;
+import 'package:currency_alarm/libs/l10n/exporter.dart' show t;
 
 import './../exporter.dart'
     show CurrencyRateService, AlarmNotificationService, ActivatedAlarmOptions;
@@ -10,8 +11,6 @@ import './../../common/exporter.dart' show CurrencyType, DataStorageService;
 const String ALARM_STORAGE_KEY = 'alarmstorage';
 
 bool isSuccessfulSave(bool v) => v == true;
-
-int i = 0;
 
 class AlarmStorageService {
   final notificationService = injectDependency<AlarmNotificationService>();
@@ -68,8 +67,7 @@ class AlarmStorageService {
 
   Future<void> _showAlarmNotification() async {
     await notificationService.showNotification(
-        title: 'Warning! Time comes',
-        body: 'currency has reached specified value');
+        title: t('pushMsg.needAttention'), body: t('pushMsg.timeComes'));
   }
 
   _resetExistingAlarms() async {
@@ -101,14 +99,12 @@ class AlarmStorageService {
       }
 
       var v = double.parse(updated);
-      print(v);
-      print(currency);
-      print(v <= currency);
+
       if (v <= currency) {
         await _showAlarmNotification();
         await _resetExistingAlarms();
+        // TODO: reset ui
       }
-      print(i++);
     });
   }
 }

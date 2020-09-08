@@ -96,21 +96,23 @@ class _ApplicationState extends State<Application> {
 
   Future<void> waitAppDependencies() => GetIt.I.allReady();
 
+  Widget _buildHome() => FutureBuilder(
+      future: waitAppDependencies(), // todo: connector wrapper
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return _buildMainScreen();
+        }
+
+        return _buildLoader();
+      });
+
   Widget _buildApp() => MaterialApp(
       title: _title,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       theme: ThemeData(fontFamily: 'Rubik'),
-      home: FutureBuilder(
-          future: waitAppDependencies(), // todo: connector wrapper
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return _buildMainScreen();
-            }
-
-            return _buildLoader();
-          }));
+      home: _buildHome());
 
   @override
   Widget build(BuildContext context) {

@@ -19,6 +19,9 @@
   "dialog.close": "Закрыть",
   "dialog.notify": "Уведомить",
 
+  "pushMsg.timeComes": "Внимание! Время пришло.",
+  "pushMsg.needAttention": "Курс достиг указанного значения.",
+
   "about.name": "О приложении",
   "about.appVersion": "Версия: {ver}",
   "about.howOftenRateUpdate": "Обновления курса: каждый <час",

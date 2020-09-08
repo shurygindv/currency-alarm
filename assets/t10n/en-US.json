@@ -18,6 +18,9 @@
     "dialog.cancel": "Cancel",
     "dialog.close": "Close",
     "dialog.notify": "Notify",
+
+    "pushMsg.timeComes": "Warning! Time comes.",
+    "pushMsg.needAttention": "Currency has reached the upper limit.",
   
     "about.name": "About",
     "about.appVersion": "App version: {ver}",
