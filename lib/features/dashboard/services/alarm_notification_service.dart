@@ -37,8 +37,8 @@ class AlarmNotificationService {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-    await flutterNotificationPlugin.show(
-        0, title, body, platformChannelSpecifics);
+    await flutterNotificationPlugin
+        .show(0, title, body, platformChannelSpecifics, payload: "item x");
   }
 
   Future<void> cancelAll() async {

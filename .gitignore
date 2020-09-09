@@ -7,11 +7,12 @@
 .atom/
 .buildlog/
 .history
+.vscode
 .svn/
 
 # artefacts
 ios
-android
+
 
 # IntelliJ related
 *.iml

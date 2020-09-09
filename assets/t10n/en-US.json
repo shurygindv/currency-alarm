@@ -7,7 +7,7 @@
     "dashboard.notifyWhen": "when value will approximately equal",
     "dashboard.currencyReminder": "Push you when the exchange rate is back again (probably, time to sell!)",
     "dashboard.currencyEquals": "≈ in",
-    "dashboard.valuesTip": "*values according to dashboard",
+    "dashboard.valuesTip": "*values from dashboard",
 
     "converter.name": "Converver",
     "converter.buy": "Buy currency",

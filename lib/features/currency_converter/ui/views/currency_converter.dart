@@ -127,29 +127,33 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
     sellInput.text = v;
   }
 
-  _toggleSellLoader() {
-    setState(() {
-      _isSellFetching = !_isSellFetching;
-    });
+  void _enableSellLoader() {
+    _isSellFetching = true;
   }
 
-  _toggleBuyLoader() {
-    setState(() {
-      _isBuyFetching = !_isBuyFetching;
-    });
+  void _offSellLoader() {
+    _isSellFetching = false;
+  }
+
+  _enableBuyLoader() {
+    _isBuyFetching = true;
+  }
+
+  _disableBuyLoader() {
+    _isBuyFetching = false;
   }
 
   _handleBuyInputChanges(String v) {
     _disableSellCurrencyInput();
 
-    _toggleSellLoader();
+    _enableSellLoader();
 
     _debounceConvertingBuyField(double.parse(v)).then((value) {
       _enableSellCurrencyInput();
-      _toggleSellLoader();
+      _offSellLoader();
       _setSellInputValue(value.rate.toString());
     }).catchError((error) {
-      _toggleSellLoader();
+      _offSellLoader();
       _enableSellCurrencyInput();
     });
   }
@@ -157,13 +161,13 @@ class _CurrencyConverterState extends State<CurrencyConverter> {
   _handleSellInputChanges(String v) {
     _disableBuyCurrencyInput();
 
-    _toggleBuyLoader();
+    _enableBuyLoader();
     _debounceConvertingSellField(double.parse(v)).then((value) {
       _enableBuyCurrencyInput();
-      _toggleBuyLoader();
+      _disableBuyLoader();
       _setBuyInputValue(value.rate.toString());
     }).catchError((error) {
-      _toggleBuyLoader();
+      _disableBuyLoader();
       _enableBuyCurrencyInput();
     });
   }
