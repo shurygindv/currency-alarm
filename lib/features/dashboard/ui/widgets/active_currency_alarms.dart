@@ -8,6 +8,7 @@ import './adding_alarm_dialog.dart' show AddingAlarmDialog;
 import './active_alarm_statistics.dart' show ActiveAlarmStatistics;
 
 import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText;
+import 'package:currency_alarm/libs/ui-effects/exporter.dart' show FadeInUi;
 
 class ActiveCurrencyAlarms extends StatefulWidget {
   final bool isAlarmActive;
@@ -100,12 +101,13 @@ class _ActiveCurrencyAlarmsState extends State<ActiveCurrencyAlarms> {
   }
 
   // todo: avoid nested .. . . ..  .
-  Widget _buildActiveAlarmStatistics() => ActiveAlarmStatistics(
+  Widget _buildActiveAlarmStatistics() => FadeInUi(
+          child: ActiveAlarmStatistics(
         toCurrency: widget.alarmOptions.to,
         onDeactivate: widget.onAlarmDeactivate,
         currencyValue: widget.alarmOptions.currency,
         activationDate: widget.alarmOptions.activationDate,
-      );
+      ));
 
   _buildAlarmContent() {
     return widget.isAlarmActive

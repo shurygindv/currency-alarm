@@ -5,7 +5,7 @@
     "dashboard.activeTracker": "ACTIVE TRACKER",
     "dashboard.rateUpdate": "last updated on {date}",
     "dashboard.notifyWhen": "when value will approximately equal",
-    "dashboard.currencyReminder": "Push you when the exchange rate is back again (probably, time to sell!)",
+    "dashboard.currencyReminder": "Notify when the current rate will approach the specified value",
     "dashboard.currencyEquals": "≈ in",
     "dashboard.valuesTip": "*values from dashboard",
 

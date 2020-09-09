@@ -5,8 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText;
 import 'package:currency_alarm/ui/exporter.dart' show Loader;
 import 'package:currency_alarm/application.dart' show AppStore;
-import 'package:currency_alarm/libs/ui-effects/exporter.dart'
-    show FadeInOutUiEffect;
+import 'package:currency_alarm/libs/ui-effects/exporter.dart' show FadeInUi;
 
 import './currency_switcher_control.dart' show CurrencySwitcherControl;
 import '../../../common/exporter.dart' show CurrencySignIcon, CurrencyType;
@@ -85,8 +84,7 @@ class CurrencyBroadcast extends StatelessWidget {
   }
 
   Widget _buildCurrencyRateDisplay() {
-    return FadeInOutUiEffect(
-        child: Consumer<AppStore>(builder: (ctx, appStore, __) {
+    return FadeInUi(child: Consumer<AppStore>(builder: (ctx, appStore, __) {
       final updateTime = appStore.updateTime;
       final rate = appStore.rate;
 

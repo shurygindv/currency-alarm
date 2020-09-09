@@ -19,8 +19,6 @@ class _DashboardViewState extends State<DashboardView> {
   CurrencyType _fromCurrencyValue = CurrencyType.USD;
   CurrencyType _toCurrencyValue = CurrencyType.RUB;
 
-  ActivatedAlarmOptions alarmOptions;
-
   final alarmStorage = injectDependency<AlarmStorageService>();
 
   void _fetchInitialRates() {
@@ -40,26 +38,11 @@ class _DashboardViewState extends State<DashboardView> {
     });
   }
 
-  _setActiveAlarm(ActivatedAlarmOptions options) {
-    setState(() {
-      alarmOptions = options;
-    });
-  }
-
-  Future<void> _updateActivationStatus() async {
-    final result = await alarmStorage.getActiveAlarmOptions();
-
-    if (result == null) return;
-
-    _setActiveAlarm(result);
-  }
-
   @override
   void initState() {
     super.initState();
 
     _fetchInitialRates();
-    _updateActivationStatus();
   }
 
   void _handleFromChanges(CurrencyType t) {
@@ -76,10 +59,6 @@ class _DashboardViewState extends State<DashboardView> {
 
   Future<void> _deactivateAlarm() async {
     await alarmStorage.deactivateAlarm();
-    // todo: rework, reactive
-    setState(() {
-      alarmOptions = null;
-    });
   }
 
   Future<bool> _activateAlarm(double enteredCurrency) async {
@@ -88,37 +67,44 @@ class _DashboardViewState extends State<DashboardView> {
       fromCurrency: _fromCurrencyValue,
       toCurrency: _toCurrencyValue,
     );
-    // todo: rework, reactive
-    await _updateActivationStatus();
 
     return result;
   }
 
+  Widget _buildCurrencyBroadcast() => CurrencyBroadcast(
+        fromCurrencyValue: _fromCurrencyValue,
+        toCurrencyValue: _toCurrencyValue,
+        onFromChanges: _handleFromChanges,
+        onToChanges: _handleToChanges,
+        isFetching: _isRateFetching,
+      );
+
+  Widget _buildActiveAlarms() => StreamBuilder(
+      stream: alarmStorage.getActiveAlarm,
+      initialData: null,
+      builder: (context, snapshot) {
+        final activeAlarm = snapshot.data;
+
+        print(activeAlarm);
+
+        return ActiveCurrencyAlarms(
+          onAlarmActivate: _activateAlarm,
+          onAlarmDeactivate: _deactivateAlarm,
+          isAlarmActive: activeAlarm != null,
+          alarmOptions: activeAlarm,
+          fromCurrencySwitcher: _fromCurrencyValue,
+          toCurrencySwitcher: _toCurrencyValue,
+        );
+      });
+
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(left: 10, right: 10),
+        margin: const EdgeInsets.only(left: 10, right: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // todo: rework
-            CurrencyBroadcast(
-              fromCurrencyValue: _fromCurrencyValue,
-              toCurrencyValue: _toCurrencyValue,
-              onFromChanges: _handleFromChanges,
-              onToChanges: _handleToChanges,
-              isFetching: _isRateFetching,
-            ),
-            ActiveCurrencyAlarms(
-              onAlarmActivate: _activateAlarm,
-              onAlarmDeactivate: _deactivateAlarm,
-              isAlarmActive: alarmOptions != null,
-              alarmOptions: alarmOptions,
-              fromCurrencySwitcher: _fromCurrencyValue,
-              toCurrencySwitcher: _toCurrencyValue,
-            )
-          ],
+          children: [_buildCurrencyBroadcast(), _buildActiveAlarms()],
         ));
   }
 }

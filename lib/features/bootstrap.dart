@@ -11,14 +11,11 @@ import 'exporter.dart'
 
 typedef FnAsync<T> = Future<T> Function();
 
-void registerAsync<T>(FnAsync feature) async {
-  GetIt.I.registerSingletonAsync<T>(feature);
-}
-
 void register<T>(T feature) {
   GetIt.I.registerSingleton<T>(feature);
 }
 
+// TODO: create own container-wrapper
 void setup() {
   register(CurrencyConverterService());
   register(CurrencyRateService());
@@ -29,7 +26,7 @@ void setup() {
   GetIt.I.registerSingletonAsync<DataStorageService>(
       () => DataStorageService().init());
 
-  GetIt.I.registerSingletonWithDependencies<AlarmStorageService>(
-      () => AlarmStorageService(),
+  GetIt.I.registerSingletonAsync<AlarmStorageService>(
+      () => AlarmStorageService().init(),
       dependsOn: [AlarmNotificationService, DataStorageService]);
 }

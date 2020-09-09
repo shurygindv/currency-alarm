@@ -2,21 +2,21 @@ import "package:flutter/material.dart";
 
 import '../debouncer.dart' show setTimeout;
 
-class FadeInOutUiEffect extends StatefulWidget {
+class FadeInUi extends StatefulWidget {
   final Widget child;
 
-  FadeInOutUiEffect({this.child});
+  FadeInUi({this.child});
 
   @override
-  _FadeInOutUiEffectState createState() => _FadeInOutUiEffectState();
+  _FadeInUiState createState() => _FadeInUiState();
 }
 
-class _FadeInOutUiEffectState extends State<FadeInOutUiEffect> {
+class _FadeInUiState extends State<FadeInUi> {
   bool _visible = false;
 
-  _toggleVisibility() {
+  void _doVisible() {
     setState(() {
-      _visible = !_visible;
+      _visible = true;
     });
   }
 
@@ -27,7 +27,7 @@ class _FadeInOutUiEffectState extends State<FadeInOutUiEffect> {
     const IN_30_MS = 30;
 
     setTimeout(IN_30_MS, () {
-      _toggleVisibility();
+      _doVisible();
     });
   }
 

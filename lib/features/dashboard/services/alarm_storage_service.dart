@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:currency_alarm/libs/background_task.dart' show BackgroundTask;
 import 'package:currency_alarm/application.dart' show injectDependency;
 import 'package:currency_alarm/libs/l10n/exporter.dart' show t;
@@ -16,6 +18,35 @@ class AlarmStorageService {
   final notificationService = injectDependency<AlarmNotificationService>();
   final currencyService = injectDependency<CurrencyRateService>();
   final storageService = injectDependency<DataStorageService>();
+
+  final _alarmController = StreamController<ActivatedAlarmOptions>();
+  Stream get getActiveAlarm => _alarmController.stream;
+
+  void _setActiveAlarm(ActivatedAlarmOptions result) {
+    _alarmController.sink.add(result);
+  }
+
+  void _resetActiveAlarm() {
+    _alarmController.sink.add(null);
+  }
+
+  Future<AlarmStorageService> init() async {
+    final result = await _getActiveAlarmOptions();
+
+    _setActiveAlarm(result);
+
+    return this;
+  }
+
+  Future<ActivatedAlarmOptions> _getActiveAlarmOptions() async {
+    final result = await storageService.getMap(ALARM_STORAGE_KEY);
+
+    if (result == null) {
+      return null;
+    }
+
+    return ActivatedAlarmOptions.fromJson(result);
+  }
 
   _saveInStorage({
     double currency,
@@ -42,34 +73,26 @@ class AlarmStorageService {
       fromCurrency: fromCurrency,
     );
 
-    if (isSuccessfulSave(result))
+    if (isSuccessfulSave(result)) {
       _putAlarmTaskInBackground(
         currency: currency,
         fromCurrency: fromCurrency,
         toCurrency: toCurrency,
       );
 
+      await _notifyUi();
+    }
     return result;
+  }
+
+  Future<void> _notifyUi() async {
+    final active = await _getActiveAlarmOptions();
+
+    _setActiveAlarm(active);
   }
 
   Future<void> deactivateAlarm() async {
     await _resetExistingAlarms();
-  }
-
-  Future<ActivatedAlarmOptions> getActiveAlarmOptions() async {
-    final result = await storageService.getMap(ALARM_STORAGE_KEY);
-
-    if (result == null) {
-      return null;
-    }
-
-    return ActivatedAlarmOptions.fromJson(result);
-  }
-
-  Future<bool> isAlarmActive() async {
-    final result = await getActiveAlarmOptions();
-
-    return result != null;
   }
 
   Future<CurrencyRateResult> _fetchRates() async {
@@ -83,9 +106,11 @@ class AlarmStorageService {
     await notificationService.showNotification(title: title, body: body);
   }
 
-  _resetExistingAlarms() async {
+  Future<void> _resetExistingAlarms() async {
     await BackgroundTask.stopAllTasks();
     await storageService.removeByKey(ALARM_STORAGE_KEY);
+
+    _resetActiveAlarm();
   }
 
   // todo: refactor this
@@ -116,8 +141,7 @@ class AlarmStorageService {
 
       if (v <= currency) {
         await _showAlarmNotification();
-        await _resetExistingAlarms();
-        // TODO: reset ui
+        await deactivateAlarm();
       }
     });
   }
