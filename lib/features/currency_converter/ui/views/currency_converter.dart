@@ -17,12 +17,12 @@ import '../../../common/exporter.dart' show CurrencySignIcon;
 final _debouncer = Debouncer(delay: Duration(milliseconds: 300));
 
 // TODO: !!rework!!: code, ux, test version
-class CurrencyConverter extends StatefulWidget {
+class CurrencyConverterView extends StatefulWidget {
   @override
   _CurrencyConverterState createState() => _CurrencyConverterState();
 }
 
-class _CurrencyConverterState extends State<CurrencyConverter> {
+class _CurrencyConverterState extends State<CurrencyConverterView> {
   CurrencyType _buyCurrencyType = CurrencyType.USD;
   CurrencyType _sellCurrencytype = CurrencyType.USD;
 

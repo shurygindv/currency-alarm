@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show describeEnum;
 
-import '../../common/exporter.dart';
+import '../../common/exporter.dart' show CurrencyType, transformToCurrencyEnum;
 
 class Currency {
   final String date;
@@ -41,12 +41,16 @@ class CurrencyRateResult {
   }
 
   factory CurrencyRateResult.fromJson(
-          String updateTime, Map<String, dynamic> data) =>
-      CurrencyRateResult(
-          usd: Currency.fromJson(data['USD'] as Map<String, dynamic>),
-          eur: Currency.fromJson(data['EUR'] as Map<String, dynamic>),
-          rub: Currency.fromJson(data['RUB'] as Map<String, dynamic>),
-          updateTime: updateTime);
+      String updateTime, Map<String, dynamic> data) {
+    Currency want(String v) =>
+        Currency.fromJson(data[v] as Map<String, dynamic>);
+
+    return CurrencyRateResult(
+        usd: want('USD'),
+        eur: want('EUR'),
+        rub: want('RUB'),
+        updateTime: updateTime);
+  }
 }
 
 class ActivatedAlarmOptions {
@@ -58,12 +62,18 @@ class ActivatedAlarmOptions {
   ActivatedAlarmOptions(
       {this.from, this.to, this.currency, this.activationDate});
 
-  factory ActivatedAlarmOptions.fromJson(Map<String, dynamic> data) =>
-      ActivatedAlarmOptions(
-          from: CurrencyType.from[data['from'] as String],
-          to: CurrencyType.from[data['to'] as String],
-          currency: (data['currency'] as double) + 0.0,
-          activationDate: DateTime.parse(data['activationDate'] as String));
+  factory ActivatedAlarmOptions.fromJson(Map<String, dynamic> data) {
+    final currency = (data['currency'] as double) + 0.0;
+    final dt = data['activationDate'] as String;
+    final from = data['from'] as String;
+    final to = data['to'] as String;
+
+    return ActivatedAlarmOptions(
+        from: transformToCurrencyEnum(from),
+        to: transformToCurrencyEnum(to),
+        currency: currency,
+        activationDate: DateTime.parse(dt));
+  }
 
   static Map<String, dynamic> toMap(
       CurrencyType from, CurrencyType to, double currency) {

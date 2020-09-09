@@ -1,11 +1,11 @@
 {
-  "dashboard.name": "Рейт",
+  "dashboard.name": "Рейтинг",
   "dashboard.notify": "Уведомить",
   "dashboard.addAlarm": "Добавить валютный трекер",
   "dashboard.activeTracker": "Активный трекер",
   "dashboard.rateUpdate": "обновлен {date}",
   "dashboard.notifyWhen": "когда валюта будет приблизительно",
-  "dashboard.currencyReminder": "Уведомит, когда курс приблизиться к указанному значению",
+  "dashboard.currencyReminder": "Уведомит при приближении актуального курса к указанному значению",
   "dashboard.currencyEquals": "≈ в",
   "dashboard.valuesTip": "*c главного экрана",
 
@@ -20,7 +20,7 @@
   "dialog.close": "Закрыть",
   "dialog.notify": "Уведомить",
 
-  "pushMsg.timeComes": "Внимание! Время пришло.",
+  "pushMsg.timeComes": "Внимание! Время пришло",
   "pushMsg.needAttention": "Курс достиг указанного значения.",
 
   "about.name": "О приложении",

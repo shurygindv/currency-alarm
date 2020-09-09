@@ -1,14 +1,34 @@
-import 'package:flutter/material.dart';
-
-import 'package:currency_alarm/ui/exporter.dart' show Caption;
+import 'package:flutter/material.dart'
+    show
+        Key,
+        Row,
+        Icon,
+        State,
+        Icons,
+        Widget,
+        Colors,
+        Center,
+        AppBar,
+        Radius,
+        Container,
+        Scaffold,
+        ClipRRect,
+        EdgeInsets,
+        showDialog,
+        IconButton,
+        BuildContext,
+        BorderRadius,
+        StatefulWidget,
+        MainAxisAlignment,
+        BottomNavigationBar,
+        BottomNavigationBarItem;
 
 import 'package:currency_alarm/core/exporter.dart' show AppColors;
-
-import 'package:currency_alarm/features/exporter.dart'
-    show DashboardView, CurrencyConverter;
-
-import 'package:currency_alarm/features/exporter.dart' show AppInfoDialog;
+import 'package:currency_alarm/ui/exporter.dart' show Caption;
 import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText;
+import 'package:currency_alarm/features/exporter.dart' show AppInfoDialog;
+import 'package:currency_alarm/features/exporter.dart'
+    show DashboardView, CurrencyConverterView;
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key key}) : super(key: key);
@@ -18,21 +38,21 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedPanelIndex = 0;
+  int _activePanelIndex = 0;
 
   final List<Widget> _widgetViews = <Widget>[
     DashboardView(),
-    CurrencyConverter(),
+    CurrencyConverterView(),
   ];
 
-  final dashboardNavItem = BottomNavigationBarItem(
+  final dashboardNavItem = const BottomNavigationBarItem(
       icon: Icon(Icons.dashboard), title: IntlText('dashboard.name'));
 
-  final converterNavItem = BottomNavigationBarItem(
+  final converterNavItem = const BottomNavigationBarItem(
       icon: Icon(Icons.assessment), title: IntlText('converter.name'));
 
   void _onItemTapped(int index) {
-    setState(() => {_selectedPanelIndex = index});
+    setState(() => {_activePanelIndex = index});
   }
 
   Future<void> _showAppInfoDialog() async {
@@ -42,6 +62,8 @@ class _MainScreenState extends State<MainScreen> {
         builder: (BuildContext context) => AppInfoDialog());
   }
 
+  Widget _getActiveView() => _widgetViews.elementAt(_activePanelIndex);
+
   Widget _buildHeader() => AppBar(
       toolbarHeight: 80,
       title: Row(
@@ -49,36 +71,29 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           const Caption(name: 'Currency Alarm'),
           IconButton(
-            icon: Icon(Icons.info),
-            enableFeedback: true,
-            color: Colors.white,
-            iconSize: 28,
-            onPressed: () {
-              _showAppInfoDialog();
-            },
-          )
+              icon: Icon(Icons.info),
+              enableFeedback: true,
+              color: Colors.white,
+              iconSize: 28,
+              onPressed: () => _showAppInfoDialog())
         ],
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent);
 
-  Widget _buildBody() {
-    final currentView = _widgetViews.elementAt(_selectedPanelIndex);
-
-    return Container(
-        margin: EdgeInsets.only(left: 10, right: 10),
-        child: ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-            child: Container(
-              child: Center(child: currentView),
-              color: Colors.white,
-            )));
-  }
+  Widget _buildBody() => Container(
+      margin: const EdgeInsets.only(left: 10, right: 10),
+      child: ClipRRect(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+          child: Container(
+            child: Center(child: _getActiveView()),
+            color: Colors.white,
+          )));
 
   _buildBottomNavbar() => BottomNavigationBar(
         items: [dashboardNavItem, converterNavItem],
         selectedItemColor: AppColors.Primary,
-        currentIndex: _selectedPanelIndex,
+        currentIndex: _activePanelIndex,
         onTap: _onItemTapped,
       );
 

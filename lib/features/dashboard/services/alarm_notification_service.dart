@@ -1,5 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+// stub
 Future selectNotification(String payload) async {
   if (payload != null) {
     print('notification payload: ' + payload);
@@ -9,21 +10,29 @@ Future selectNotification(String payload) async {
 class AlarmNotificationService {
   FlutterLocalNotificationsPlugin flutterNotificationPlugin;
 
+  _initAndroidSettings() {
+    return AndroidInitializationSettings('app_icon');
+  }
+
+  _initiOSSettings() {
+    return IOSInitializationSettings();
+  }
+
+  FlutterLocalNotificationsPlugin _createFlutterNotificationPlugin() {
+    return FlutterLocalNotificationsPlugin();
+  }
+
   Future<AlarmNotificationService> init() async {
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    var plugin = _createFlutterNotificationPlugin();
 
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
-    var initializationSettingsIOS = IOSInitializationSettings();
+    var androidSettings = _initAndroidSettings();
+    var iOSSettings = _initiOSSettings();
 
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+    var settings = InitializationSettings(androidSettings, iOSSettings);
 
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
+    await plugin.initialize(settings, onSelectNotification: selectNotification);
 
-    flutterNotificationPlugin = flutterLocalNotificationsPlugin;
+    flutterNotificationPlugin = plugin;
 
     return this;
   }

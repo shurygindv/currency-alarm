@@ -1,4 +1,3 @@
-import 'package:currency_alarm/features/dashboard/data/models.dart';
 import 'package:currency_alarm/libs/background_task.dart' show BackgroundTask;
 import 'package:currency_alarm/application.dart' show injectDependency;
 import 'package:currency_alarm/libs/l10n/exporter.dart' show t;
@@ -6,6 +5,7 @@ import 'package:currency_alarm/libs/l10n/exporter.dart' show t;
 import './../exporter.dart'
     show CurrencyRateService, AlarmNotificationService, ActivatedAlarmOptions;
 
+import './../data/models.dart' show CurrencyRateResult;
 import './../../common/exporter.dart' show CurrencyType, DataStorageService;
 
 const String ALARM_STORAGE_KEY = 'alarmstorage';
@@ -17,6 +17,17 @@ class AlarmStorageService {
   final currencyService = injectDependency<CurrencyRateService>();
   final storageService = injectDependency<DataStorageService>();
 
+  _saveInStorage({
+    double currency,
+    CurrencyType fromCurrency,
+    CurrencyType toCurrency,
+  }) async {
+    final serialized =
+        ActivatedAlarmOptions.toMap(fromCurrency, toCurrency, currency);
+
+    return await storageService.setMap(ALARM_STORAGE_KEY, serialized);
+  }
+
   // only one
   Future<bool> activateCurrencyAlarm({
     double currency,
@@ -25,13 +36,13 @@ class AlarmStorageService {
   }) async {
     await _resetExistingAlarms();
 
-    final activationOptions =
-        ActivatedAlarmOptions.toMap(fromCurrency, toCurrency, currency);
+    final result = await _saveInStorage(
+      currency: currency,
+      toCurrency: toCurrency,
+      fromCurrency: fromCurrency,
+    );
 
-    final result =
-        await storageService.setMap(ALARM_STORAGE_KEY, activationOptions);
-
-    if (isSuccessfulSave(result) == true)
+    if (isSuccessfulSave(result))
       _putAlarmTaskInBackground(
         currency: currency,
         fromCurrency: fromCurrency,
@@ -66,8 +77,10 @@ class AlarmStorageService {
   }
 
   Future<void> _showAlarmNotification() async {
-    await notificationService.showNotification(
-        title: t('pushMsg.needAttention'), body: t('pushMsg.timeComes'));
+    final title = t('pushMsg.needAttention');
+    final body = t('pushMsg.timeComes');
+
+    await notificationService.showNotification(title: title, body: body);
   }
 
   _resetExistingAlarms() async {
@@ -75,6 +88,7 @@ class AlarmStorageService {
     await storageService.removeByKey(ALARM_STORAGE_KEY);
   }
 
+  // todo: refactor this
   _putAlarmTaskInBackground({
     double currency,
     CurrencyType fromCurrency,

@@ -1,6 +1,6 @@
+import 'package:flutter/foundation.dart' show compute;
 import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart';
-import 'dart:convert';
+import 'dart:convert' show json;
 
 import '../../common/interface.dart' show BaseService;
 import '../data/models.dart' show CurrencyRateResult;

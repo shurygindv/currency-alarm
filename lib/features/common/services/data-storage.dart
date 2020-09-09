@@ -1,22 +1,24 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-// todo: inst, error handler
+import 'package:shared_preferences/shared_preferences.dart';
+
 class DataStorageService {
-  SharedPreferences _dataManager;
+  SharedPreferences _store;
 
   Future<DataStorageService> init() async {
-    _dataManager = await SharedPreferences.getInstance();
+    _store = await SharedPreferences.getInstance();
 
     return this;
   }
 
   Future<bool> setMap(String key, Map<String, dynamic> value) async {
-    return await _dataManager.setString(key, json.encode(value));
+    final serialized = json.encode(value);
+
+    return await _store.setString(key, serialized);
   }
 
   Future<Map<String, dynamic>> getMap(String key) async {
-    var result = _dataManager.getString(key);
+    var result = _store.getString(key);
 
     if (result == null) {
       return null;
@@ -26,6 +28,6 @@ class DataStorageService {
   }
 
   Future<bool> removeByKey(String key) async {
-    return _dataManager.remove(key);
+    return _store.remove(key);
   }
 }
