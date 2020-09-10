@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:rxdart/rxdart.dart';
 import 'package:currency_alarm/libs/background_task.dart' show BackgroundTask;
 import 'package:currency_alarm/application.dart' show injectDependency;
 import 'package:currency_alarm/libs/l10n/exporter.dart' show t;
@@ -19,7 +19,7 @@ class AlarmStorageService {
   final currencyService = injectDependency<CurrencyRateService>();
   final storageService = injectDependency<DataStorageService>();
 
-  final _alarmController = StreamController<ActivatedAlarmOptions>();
+  final _alarmController = BehaviorSubject<ActivatedAlarmOptions>();
   Stream get getActiveAlarm => _alarmController.stream;
 
   void _setActiveAlarm(ActivatedAlarmOptions result) {
@@ -37,6 +37,8 @@ class AlarmStorageService {
 
     return this;
   }
+
+  void dispose() {}
 
   Future<ActivatedAlarmOptions> _getActiveAlarmOptions() async {
     final result = await storageService.getMap(ALARM_STORAGE_KEY);
