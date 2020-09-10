@@ -6,7 +6,7 @@ class BackgroundTask {
   static Future<int> work(TaskFn fn) {
     // default cfg
     final config = BackgroundFetchConfig(
-        minimumFetchInterval: 15,
+        minimumFetchInterval: 120,
         stopOnTerminate: true,
         requiresBatteryNotLow: false,
         forceAlarmManager: false,

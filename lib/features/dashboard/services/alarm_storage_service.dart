@@ -76,11 +76,7 @@ class AlarmStorageService {
     );
 
     if (isSuccessfulSave(result)) {
-      _putAlarmTaskInBackground(
-        currency: currency,
-        fromCurrency: fromCurrency,
-        toCurrency: toCurrency,
-      );
+      _syncAlarmTaskInBackground();
 
       await _notifyUi();
     }
@@ -116,24 +112,27 @@ class AlarmStorageService {
   }
 
   // todo: refactor this
-  _putAlarmTaskInBackground({
-    double currency,
-    CurrencyType fromCurrency,
-    CurrencyType toCurrency,
-  }) async {
+  _syncAlarmTaskInBackground() async {
     BackgroundTask.work((String _taskId) async {
       final rate = await _fetchRates();
+      final saved = await _getActiveAlarmOptions();
+
+      if (saved == null) {
+        await deactivateAlarm();
+        return;
+      }
+
       String updated;
 
-      switch (fromCurrency) {
+      switch (saved.from) {
         case CurrencyType.USD:
-          updated = rate.getUSDRateIn(toCurrency);
+          updated = rate.getUSDRateIn(saved.to);
           break;
         case CurrencyType.EUR:
-          updated = rate.getEURRateIn(toCurrency);
+          updated = rate.getEURRateIn(saved.to);
           break;
         case CurrencyType.RUB:
-          updated = rate.getRUBRateIn(toCurrency);
+          updated = rate.getRUBRateIn(saved.to);
           break;
         default:
           throw new Exception('currency_broadcast: unknown _fromCurrencyValue');
@@ -141,7 +140,7 @@ class AlarmStorageService {
 
       var v = double.parse(updated);
 
-      if (v <= currency) {
+      if (v <= saved.currency) {
         await _showAlarmNotification();
         await deactivateAlarm();
       }
