@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
-import 'package:currency_alarm/libs/background_task.dart' show BackgroundTask;
+import 'package:currency_alarm/libs/background_task/exporter.dart'
+    show BackgroundTask;
 import 'package:currency_alarm/application.dart' show injectDependency;
 import 'package:currency_alarm/libs/l10n/exporter.dart' show t;
 
@@ -113,37 +114,6 @@ class AlarmStorageService {
 
   // todo: refactor this
   _syncAlarmTaskInBackground() async {
-    BackgroundTask.work((String _taskId) async {
-      final rate = await _fetchRates();
-      final saved = await _getActiveAlarmOptions();
-
-      if (saved == null) {
-        await deactivateAlarm();
-        return;
-      }
-
-      String updated;
-
-      switch (saved.from) {
-        case CurrencyType.USD:
-          updated = rate.getUSDRateIn(saved.to);
-          break;
-        case CurrencyType.EUR:
-          updated = rate.getEURRateIn(saved.to);
-          break;
-        case CurrencyType.RUB:
-          updated = rate.getRUBRateIn(saved.to);
-          break;
-        default:
-          throw new Exception('currency_broadcast: unknown _fromCurrencyValue');
-      }
-
-      var v = double.parse(updated);
-
-      if (v <= saved.currency) {
-        await _showAlarmNotification();
-        await deactivateAlarm();
-      }
-    });
+    BackgroundTask.setup();
   }
 }
