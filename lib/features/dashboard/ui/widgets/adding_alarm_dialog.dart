@@ -1,9 +1,12 @@
+import 'dart:async';
+
+import 'package:currency_alarm/features/dashboard/exporter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:currency_alarm/application.dart' show AppStore;
 import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText;
+import 'package:currency_alarm/application.dart' show injectDependency;
 
 import '../../../common/exporter.dart' show CurrencyType;
 import './currency_text.dart' show CurrencyText;
@@ -19,7 +22,7 @@ class Counter extends StatelessWidget {
   final VoidCallback onDecrement;
 
   const Counter({
-    this.value,
+    this.value = 0.0,
     this.type,
     this.onIncrement,
     this.onDecrement,
@@ -78,44 +81,12 @@ class AddingAlarmDialog extends StatefulWidget {
 }
 
 class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
-  double currencyValue;
-
   _AddingAlarmDialogState();
 
-  void setCurrency(double v) {
-    setState(() {
-      currencyValue = v;
-    });
-  }
+  double currencyValue = 0.0;
+  StreamSubscription<CurrencyRateResult> rateSubscription;
 
-  void setInitialCurrencyValue() {
-    double value;
-
-    try {
-      final v = context.read<AppStore>().rate;
-
-      value = double.parse(_getCurrentCurrency(v));
-    } catch (e) {
-      value = 0.0;
-    }
-
-    setCurrency(value);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    setInitialCurrencyValue();
-  }
-
-  _handleIncremening() {
-    setCurrency(currencyValue + 0.1);
-  }
-
-  _handleDecremeting() {
-    setCurrency(currencyValue - 0.1);
-  }
+  final currencyRateService = injectDependency<CurrencyRateService>();
 
   // todo: remake it
   String _getCurrentCurrency(CurrencyRateResult rate) {
@@ -129,6 +100,41 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
       default:
         throw new Exception('currency_broadcast: unknown _fromCurrencyValue');
     }
+  }
+
+  void _updateCurrency(event) {
+    var v;
+
+    try {
+      v = double.parse(_getCurrentCurrency(event));
+    } catch (e) {
+      v = 0.0;
+    }
+
+    setCurrency(v);
+  }
+
+  void _listenServiceRateUpdates() {
+    rateSubscription =
+        currencyRateService.getCurrencyRate.listen(_updateCurrency);
+  }
+
+  void _disposeServiceRateUpdates() {
+    rateSubscription.cancel();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _listenServiceRateUpdates();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _disposeServiceRateUpdates();
   }
 
   // todo: enum, and avoid it too
@@ -145,9 +151,23 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
     }
   }
 
+  void setCurrency(double v) {
+    setState(() {
+      currencyValue = v;
+    });
+  }
+
+  void _handleIncremening() {
+    setCurrency(currencyValue + 0.1);
+  }
+
+  void _handleDecremeting() {
+    setCurrency(currencyValue - 0.1);
+  }
+
   // TOOD: abstract
   Widget _buildBadge(String v) => Container(
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.grey[100],
@@ -198,15 +218,7 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
             style: TextStyle(fontSize: 12, color: Colors.black45)),
       ]);
 
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: _buildDialogTitle(),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      content: SingleChildScrollView(child: _buildDialogContent()),
-      actions: <Widget>[
+  List<Widget> _buildDialogActions() => <Widget>[
         FlatButton(
           onPressed: () => Navigator.pop(context, false), // passing false
           child: IntlText('dialog.cancel'),
@@ -219,7 +231,16 @@ class _AddingAlarmDialogState extends State<AddingAlarmDialog> {
                 .whenComplete(() => Navigator.of(context).pop());
           },
         ),
-      ],
-    );
+      ];
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        title: _buildDialogTitle(),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        content: SingleChildScrollView(child: _buildDialogContent()),
+        actions: _buildDialogActions());
   }
 }

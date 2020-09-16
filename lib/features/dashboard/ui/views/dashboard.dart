@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:currency_alarm/application.dart' show AppStore;
 import 'package:currency_alarm/features/exporter.dart'
-    show AlarmStorageService, ActivatedAlarmOptions;
+    show AlarmStorageService, CurrencyRateService, ActivatedAlarmOptions;
 import 'package:currency_alarm/application.dart' show injectDependency;
 
 import '../widgets/currency_broadcast.dart' show CurrencyBroadcast;
@@ -20,6 +19,7 @@ class _DashboardViewState extends State<DashboardView> {
   CurrencyType _toCurrencyValue = CurrencyType.RUB;
 
   final alarmStorage = injectDependency<AlarmStorageService>();
+  final currencyRateService = injectDependency<CurrencyRateService>();
 
   void _fetchInitialRates() {
     // Ы
@@ -28,7 +28,7 @@ class _DashboardViewState extends State<DashboardView> {
         _isRateFetching = true;
       });
 
-      await AppStore.getProvider(context).fetchRates();
+      await currencyRateService.fetchRate();
 
       if (mounted) {
         setState(() {
@@ -71,27 +71,33 @@ class _DashboardViewState extends State<DashboardView> {
     return result;
   }
 
-  Widget _buildCurrencyBroadcast() => CurrencyBroadcast(
-        fromCurrencyValue: _fromCurrencyValue,
-        toCurrencyValue: _toCurrencyValue,
-        onFromChanges: _handleFromChanges,
-        onToChanges: _handleToChanges,
-        isFetching: _isRateFetching,
-      );
+  Widget _buildCurrencyBroadcast() => StreamBuilder(
+      stream: currencyRateService.getCurrencyRate,
+      initialData: null,
+      builder: (context, snapshot) {
+        final rateResult = snapshot.data;
+
+        return CurrencyBroadcast(
+          fromCurrencyValue: _fromCurrencyValue,
+          toCurrencyValue: _toCurrencyValue,
+          onFromChanges: _handleFromChanges,
+          onToChanges: _handleToChanges,
+          isFetching: _isRateFetching,
+          rateResult: rateResult,
+        );
+      });
 
   Widget _buildActiveAlarms() => StreamBuilder(
       stream: alarmStorage.getActiveAlarm,
       initialData: null,
       builder: (context, snapshot) {
-        final activeAlarm = snapshot.data;
-
-        print(activeAlarm);
+        final activatedAlarm = snapshot.data;
 
         return ActiveCurrencyAlarms(
           onAlarmActivate: _activateAlarm,
           onAlarmDeactivate: _deactivateAlarm,
-          isAlarmActive: activeAlarm != null,
-          alarmOptions: activeAlarm,
+          isAlarmActive: activatedAlarm != null,
+          alarmOptions: activatedAlarm,
           fromCurrencySwitcher: _fromCurrencyValue,
           toCurrencySwitcher: _toCurrencyValue,
         );

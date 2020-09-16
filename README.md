@@ -14,7 +14,7 @@ Push a notification when time comes.
 1. flutter (look at `pubspec.yaml` for dependencies), intl - `ru_RU`, `en_US`
 2. AWS DynamoDB / AWS Lambda (dev stage) / AWS API Gateway / API Cloudwatch trigger, logs
 
-As you know, for every thing in our world need pay / investigate in deep: to get up-to-date currency rates we aggregate many mixed free APIs: updates once in a week / limited (<1k/2k requests per month) and pull data from available resources
+As you know, for every thing in our world need pay / wiggle: to get up-to-date currency rates we aggregate many mixed free APIs: updates once in a week / limited (<1k/2k requests per month) and pull data from available resources
 
 ## todo
 

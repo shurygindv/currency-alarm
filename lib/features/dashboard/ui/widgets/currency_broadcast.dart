@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText;
 import 'package:currency_alarm/ui/exporter.dart' show Loader;
-import 'package:currency_alarm/application.dart' show AppStore;
 import 'package:currency_alarm/libs/ui-effects/exporter.dart' show FadeInUi;
 
 import './currency_switcher_control.dart' show CurrencySwitcherControl;
@@ -22,22 +20,25 @@ class CurrencyBroadcast extends StatelessWidget {
   final CurrencyChangeFn onFromChanges;
   final CurrencyChangeFn onToChanges;
 
+  final CurrencyRateResult rateResult;
+
   CurrencyBroadcast({
     this.fromCurrencyValue,
     this.toCurrencyValue,
     this.onFromChanges,
     this.onToChanges,
     this.isFetching,
+    this.rateResult,
   });
 
-  _getCurrentCurrency(CurrencyRateResult rate) {
+  _getCurrentCurrency() {
     switch (fromCurrencyValue) {
       case CurrencyType.USD:
-        return rate.getUSDRateIn(toCurrencyValue);
+        return rateResult.getUSDRateIn(toCurrencyValue);
       case CurrencyType.EUR:
-        return rate.getEURRateIn(toCurrencyValue);
+        return rateResult.getEURRateIn(toCurrencyValue);
       case CurrencyType.RUB:
-        return rate.getRUBRateIn(toCurrencyValue);
+        return rateResult.getRUBRateIn(toCurrencyValue);
       default:
         throw new Exception('currency_broadcast: unknown _fromCurrencyValue');
     }
@@ -75,7 +76,7 @@ class CurrencyBroadcast extends StatelessWidget {
   }
 
   // todo: enum
-  String getDtPattern(String locale) {
+  String getDatePattern(String locale) {
     if (locale == 'ru_RU') {
       return "d MMMM, HH:MM:ss";
     }
@@ -83,24 +84,21 @@ class CurrencyBroadcast extends StatelessWidget {
     return "d MMMM, hh:mm a";
   }
 
-  Widget _buildCurrencyRateDisplay() {
-    return FadeInUi(child: Consumer<AppStore>(builder: (ctx, appStore, __) {
-      final updateTime = appStore.updateTime;
-      final rate = appStore.rate;
+  Widget _buildCurrencyRateDisplay(String localeName) {
+    final updateTime = rateResult.updateTime;
 
-      final timestamp =
-          DateFormat(getDtPattern(ctx.locale.toString())).format(updateTime);
+    final timestamp = DateFormat(getDatePattern(localeName)).format(updateTime);
 
-      return Container(
-          margin: EdgeInsets.only(top: 30, bottom: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildCurrentRate(_getCurrentCurrency(rate)),
-              _buildLastRateUpdateTime(timestamp),
-            ],
-          ));
-    }));
+    return FadeInUi(
+        child: Container(
+            margin: EdgeInsets.only(top: 30, bottom: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildCurrentRate(_getCurrentCurrency()),
+                _buildLastRateUpdateTime(timestamp),
+              ],
+            )));
   }
 
   Widget _buildLoader() => Container(
@@ -117,10 +115,14 @@ class CurrencyBroadcast extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext ctx) {
+    final localeName = ctx.locale.toString();
+
     return Column(
       children: [
-        isFetching ? _buildLoader() : _buildCurrencyRateDisplay(),
+        isFetching || rateResult == null // TODO: empty
+            ? _buildLoader()
+            : _buildCurrencyRateDisplay(localeName),
         CurrencySwitcherControl(
           fromValue: fromCurrencyValue,
           toValue: toCurrencyValue,

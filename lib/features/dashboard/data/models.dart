@@ -24,9 +24,9 @@ class CurrencyRateResult {
   final Currency usd;
   final Currency eur;
   final Currency rub;
-  final String updateTime;
+  final DateTime updateTime;
 
-  CurrencyRateResult({this.usd, this.eur, this.rub, this.updateTime = ""});
+  CurrencyRateResult({this.usd, this.eur, this.rub, this.updateTime});
 
   String getUSDRateIn(CurrencyType key) {
     return usd.getRate(describeEnum(key)).toStringAsFixed(3);
@@ -49,7 +49,7 @@ class CurrencyRateResult {
         usd: want('USD'),
         eur: want('EUR'),
         rub: want('RUB'),
-        updateTime: updateTime);
+        updateTime: DateTime.parse(updateTime));
   }
 }
 

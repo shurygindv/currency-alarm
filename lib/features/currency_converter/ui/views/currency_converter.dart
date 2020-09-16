@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'package:provider/provider.dart';
+import 'package:currency_alarm/features/currency_converter/exporter.dart';
 import 'package:flutter/material.dart';
 
 import 'package:currency_alarm/libs/debouncer.dart';
-import 'package:currency_alarm/application.dart' show AppStore;
+import 'package:currency_alarm/application.dart' show injectDependency;
 import 'package:currency_alarm/libs/l10n/exporter.dart' show t;
 
 import '../../data/models.dart' show ConverterResult;
@@ -33,6 +33,8 @@ class _CurrencyConverterState extends State<CurrencyConverterView> {
   final buyInput = TextEditingController();
   final sellInput = TextEditingController();
 
+  final converterService = injectDependency<CurrencyConverterService>();
+
   @override
   void dispose() {
     buyInput.dispose();
@@ -43,9 +45,7 @@ class _CurrencyConverterState extends State<CurrencyConverterView> {
 
   Future<ConverterResult> _convertCurrency(double amount,
       {CurrencyType buy, CurrencyType sell}) async {
-    return context
-        .read<AppStore>()
-        .convertCurrency(amount, buy: buy, sell: sell);
+    return converterService.convert(amount, buy, sell);
   }
 
   Future<ConverterResult> _fetchBuy(double amount) async {
