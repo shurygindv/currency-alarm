@@ -19,7 +19,7 @@ As you know, for every thing in our world need pay / wiggle: to get up-to-date c
 1. use https://pub.dev/packages/flutter_hooks to manage a Widget lifecycles
 2. enhance error handlers
 3. use AWS request mapping service
-4. pull competitor features
+4. check competitor features
 5. refactoring / ux / testing
 6. repeat #5
 
