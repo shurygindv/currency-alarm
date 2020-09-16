@@ -25,7 +25,7 @@ As you know, for every thing in our world need pay / investigate in deep: to get
 5. refactoring / ux / testing
 6. repeat #5
 
-# intl codegen
+## intl codegen
 
 1. `flutter pub pub run intl_translation:extract_to_arb --output-dir=assets/i18n lib/core/app_locale.dart`
 
