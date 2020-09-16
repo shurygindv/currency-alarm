@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:currency_alarm/libs/debouncer.dart';
 import 'package:currency_alarm/application.dart' show AppStore;
@@ -10,12 +9,12 @@ import 'package:currency_alarm/libs/l10n/exporter.dart' show t;
 import '../../data/models.dart' show ConverterResult;
 import '../../../common/types.dart' show CurrencyType;
 
-import './currency_text_input.dart' show CurrencyTextInput;
-import './currency_radio_section.dart' show CurrencyRadioSection;
+import '../widgets/currency_text_input.dart' show CurrencyTextInput;
+import '../widgets/currency_radio_section.dart' show CurrencyRadioSection;
 
 final _debouncer = Debouncer(delay: Duration(milliseconds: 300));
 
-// TODO: !!rework!!: code, ux, test version
+// TODO: refactoring, ux
 class CurrencyConverterView extends StatefulWidget {
   @override
   _CurrencyConverterState createState() => _CurrencyConverterState();
@@ -47,7 +46,6 @@ class _CurrencyConverterState extends State<CurrencyConverterView> {
     return context
         .read<AppStore>()
         .convertCurrency(amount, buy: buy, sell: sell);
-    // return await CurrencyApi.convert(amount, buy, sell);
   }
 
   Future<ConverterResult> _fetchBuy(double amount) async {
