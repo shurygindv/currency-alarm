@@ -1,6 +1,6 @@
 # currency alarm
 
-Everything what you need to track current currency rates.
+Everything what you need.... to track current currency rates.
 
 Push a notification when time comes.
 
@@ -30,3 +30,6 @@ As you know, for every thing in our world need pay / investigate in deep: to get
 1. `flutter pub pub run intl_translation:extract_to_arb --output-dir=assets/i18n lib/core/app_locale.dart`
 
 2. `flutter pub pub run intl_translation:generate_from_arb --output-dir=lib/initialize_i18n  --no-use-deferred-loading lib/core/app_locale.dart assets/i18n/intl_*.arb`
+
+-------------------------
+© Daniil Shurygin
