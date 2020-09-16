@@ -13,24 +13,24 @@ import 'package:flutter/material.dart'
         TextEditingController,
         OutlineInputBorder;
 
-import 'package:currency_alarm/ui/exporter.dart' show NoContent;
-import 'package:currency_alarm/libs/l10n/exporter.dart' show t;
-
 import '../../../common/exporter.dart' show CurrencySignIcon, CurrencyType;
 
 class CurrencyTextInput extends StatelessWidget {
-  final TextEditingController controller;
-  final CurrencyType type;
   final bool isFetching;
   final bool isEnabled;
+  final String labelText;
+  final CurrencyType type;
+  final TextEditingController controller;
   final void Function(String v) onChanged;
 
-  CurrencyTextInput(
-      {this.type,
-      this.isEnabled,
-      this.isFetching,
-      this.controller,
-      this.onChanged});
+  CurrencyTextInput({
+    this.type,
+    this.isEnabled,
+    this.labelText,
+    this.isFetching,
+    this.controller,
+    this.onChanged,
+  });
 
   Widget _buildRingLoader() {
     return Container(
@@ -55,8 +55,8 @@ class CurrencyTextInput extends StatelessWidget {
         decoration: InputDecoration(
             icon: CurrencySignIcon(name: type, size: 20),
             border: OutlineInputBorder(),
-            suffixIcon: isFetching ? _buildRingLoader() : NoContent(),
-            labelText: t("converter.buyLabel")),
+            suffixIcon: isFetching ? _buildRingLoader() : null,
+            labelText: labelText),
       ),
     );
   }

@@ -3,12 +3,10 @@ import 'package:rxdart/rxdart.dart';
 import 'package:currency_alarm/libs/background_task/exporter.dart'
     show BackgroundTask;
 import 'package:currency_alarm/application.dart' show injectDependency;
-import 'package:currency_alarm/libs/l10n/exporter.dart' show t;
 
 import './../exporter.dart'
     show CurrencyRateService, AlarmNotificationService, ActivatedAlarmOptions;
 
-import './../data/models.dart' show CurrencyRateResult;
 import './../../common/exporter.dart' show CurrencyType, DataStorageService;
 
 const String ALARM_STORAGE_KEY = 'alarmstorage';
@@ -39,7 +37,9 @@ class AlarmStorageService {
     return this;
   }
 
-  void dispose() {}
+  void dispose() {
+    _alarmController.close();
+  }
 
   Future<ActivatedAlarmOptions> _getActiveAlarmOptions() async {
     final result = await storageService.getMap(ALARM_STORAGE_KEY);
@@ -94,6 +94,7 @@ class AlarmStorageService {
     await _resetExistingAlarms();
   }
 
+  /*
   Future<CurrencyRateResult> _fetchRates() async {
     return currencyService.fetchRate();
   }
@@ -104,6 +105,7 @@ class AlarmStorageService {
 
     await notificationService.showNotification(title: title, body: body);
   }
+  */
 
   Future<void> _resetExistingAlarms() async {
     await BackgroundTask.stopAllTasks();
@@ -112,8 +114,7 @@ class AlarmStorageService {
     _resetActiveAlarm();
   }
 
-  // todo: refactor this
-  _syncAlarmTaskInBackground() async {
+  Future<void> _syncAlarmTaskInBackground() async {
     BackgroundTask.setup();
   }
 }

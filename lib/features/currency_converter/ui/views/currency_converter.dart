@@ -5,14 +5,13 @@ import 'package:flutter/services.dart';
 
 import 'package:currency_alarm/libs/debouncer.dart';
 import 'package:currency_alarm/application.dart' show AppStore;
-import 'package:currency_alarm/libs/l10n/exporter.dart' show IntlText, t;
-
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:currency_alarm/libs/l10n/exporter.dart' show t;
 
 import '../../data/models.dart' show ConverterResult;
 import '../../../common/types.dart' show CurrencyType;
 
-import '../../../common/exporter.dart' show CurrencySignIcon;
+import './currency_text_input.dart' show CurrencyTextInput;
+import './currency_radio_section.dart' show CurrencyRadioSection;
 
 final _debouncer = Debouncer(delay: Duration(milliseconds: 300));
 
@@ -73,7 +72,6 @@ class _CurrencyConverterState extends State<CurrencyConverterView> {
   }
 
   // ==
-
   Future<ConverterResult> _fetchSell(double amount) async {
     var result = await _convertCurrency(amount,
         buy: _sellCurrencytype, sell: _buyCurrencyType);
@@ -172,17 +170,6 @@ class _CurrencyConverterState extends State<CurrencyConverterView> {
     });
   }
 
-  Widget _buildRingLoader() {
-    return Container(
-      width: 40,
-      child: SpinKitRing(
-        color: Colors.black38,
-        size: 20.0,
-        lineWidth: 2,
-      ),
-    );
-  }
-
   _handleBuyRadioInputChanges(CurrencyType v) {
     setState(() {
       _buyCurrencyType = v;
@@ -203,101 +190,46 @@ class _CurrencyConverterState extends State<CurrencyConverterView> {
     }
   }
 
+  Widget _buildBuyInput() => CurrencyTextInput(
+        labelText: t("converter.buyLabel"),
+        type: _buyCurrencyType,
+        isEnabled: _isBuyEnabled,
+        onChanged: _handleBuyInputChanges,
+        isFetching: _isBuyFetching,
+        controller: buyInput,
+      );
+
+  Widget _buildBuyCurrencySelector() => CurrencyRadioSection(
+      titleText: t('converter.buy'),
+      value: _buyCurrencyType,
+      onChanged: _handleBuyRadioInputChanges);
+
+  Widget _buildSellInput() => CurrencyTextInput(
+        labelText: t("converter.sellLabel"),
+        type: _sellCurrencytype,
+        isEnabled: _isSellEnabled,
+        onChanged: _handleSellInputChanges,
+        isFetching: _isSellFetching,
+        controller: sellInput,
+      );
+
+  Widget _buildSellCurrencySelector() => CurrencyRadioSection(
+      titleText: t('converter.sell'),
+      value: _sellCurrencytype,
+      onChanged: _handleSellRadioInputChanges);
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 20),
       child: Column(children: [
+        _buildBuyInput(),
+        _buildSellInput(),
         Container(
-          margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-          child: TextField(
-            controller: buyInput,
-            enabled: _isBuyEnabled,
-            keyboardType: TextInputType.number,
-            onChanged: _handleBuyInputChanges,
-            decoration: InputDecoration(
-                icon: CurrencySignIcon(name: _buyCurrencyType, size: 20),
-                border: OutlineInputBorder(),
-                suffixIcon: _isBuyFetching ? _buildRingLoader() : null,
-                labelText: t("converter.buyLabel")),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
-          child: TextField(
-            controller: sellInput,
-            enabled: _isSellEnabled,
-            keyboardType: TextInputType.number,
-            onChanged: _handleSellInputChanges,
-            decoration: InputDecoration(
-                icon: CurrencySignIcon(name: _sellCurrencytype, size: 20),
-                border: OutlineInputBorder(),
-                suffixIcon: _isSellFetching ? _buildRingLoader() : null,
-                labelText: t("converter.sellLabel")),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 20),
+          margin: const EdgeInsets.only(top: 20),
           child: Column(children: [
-            const IntlText(
-              'converter.buy',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
-            ),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Expanded(
-                  child: RadioListTile(
-                title: const Text('USD', style: TextStyle(fontSize: 13)),
-                value: CurrencyType.USD,
-                groupValue: _buyCurrencyType,
-                onChanged: _handleBuyRadioInputChanges,
-              )),
-              Expanded(
-                  child: RadioListTile(
-                title: const Text('RUB', style: TextStyle(fontSize: 13)),
-                value: CurrencyType.RUB,
-                groupValue: _buyCurrencyType,
-                onChanged: _handleBuyRadioInputChanges,
-              )),
-              //=
-              Expanded(
-                  child: RadioListTile(
-                title: const Text('EUR', style: TextStyle(fontSize: 13)),
-                value: CurrencyType.EUR,
-                groupValue: _buyCurrencyType,
-                onChanged: _handleBuyRadioInputChanges,
-              ))
-            ]),
-
-            // ===
-
-            const IntlText(
-              'converter.sell',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
-            ),
-            Row(mainAxisSize: MainAxisSize.min, children: [
-              Expanded(
-                  child: RadioListTile(
-                title: const Text('USD', style: TextStyle(fontSize: 13)),
-                value: CurrencyType.USD,
-                groupValue: _sellCurrencytype,
-                onChanged: _handleSellRadioInputChanges,
-              )),
-              Expanded(
-                  child: RadioListTile(
-                title: const Text('RUB', style: TextStyle(fontSize: 13)),
-                value: CurrencyType.RUB,
-                groupValue: _sellCurrencytype,
-                onChanged: _handleSellRadioInputChanges,
-              )),
-              //=
-              Expanded(
-                  child: RadioListTile(
-                title: const Text('EUR', style: TextStyle(fontSize: 13)),
-                value: CurrencyType.EUR,
-                groupValue: _sellCurrencytype,
-                onChanged: _handleSellRadioInputChanges,
-              ))
-            ])
+            _buildBuyCurrencySelector(),
+            _buildSellCurrencySelector(),
           ]),
         )
       ]),
