@@ -3,7 +3,7 @@ name: Currency Alarm (Flutter CI)
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build-android:
@@ -25,7 +25,7 @@ jobs:
         with:
           flutter-version: "1.22.5"
 
-      - uses: Install deps
+      - name: Install deps
         run: flutter pub get
       
       #- name: Analyze the Dart code for any errors

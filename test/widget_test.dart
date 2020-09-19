@@ -9,9 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:currency_alarm/application.dart';
+import 'package:currency_alarm/libs/l10n/exporter.dart' show Localization;
 
 void main() {
   testWidgets('Application works', (WidgetTester tester) async {
-    await tester.pumpWidget(Application());
+    await tester.pumpWidget(Localization(Application()));
   });
 }
