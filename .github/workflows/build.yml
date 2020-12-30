@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build-android:
+  build:
     name: Build .apk
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -24,7 +24,8 @@ jobs:
         uses: subosito/flutter-action@v1
         with:
           flutter-version: "1.22.5"
-
+          channel: "stable"
+        
       - name: Install deps
         run: flutter pub get
       
@@ -34,4 +35,5 @@ jobs:
       - name: Run tests
         run: flutter test
 
-      - run: flutter build apk
+      - name: Build Android app
+        run: flutter build apk --split-per-abi --debug
