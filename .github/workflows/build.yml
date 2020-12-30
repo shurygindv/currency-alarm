@@ -10,6 +10,11 @@ jobs:
     name: Build .apk
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_PATH: ${{ secrets.KEY_PATH }}
 
     strategy:
       fail-fast: true

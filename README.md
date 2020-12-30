@@ -2,11 +2,15 @@
 
 ![Currency Alarm (Flutter CI)](https://github.com/shurygindv/currency-alarm/workflows/Currency%20Alarm%20(Flutter%20CI)/badge.svg)
 
+Let you know when the rate (USD, EUR, RUB) completely achieves the set level (less/more)
+
+## Intro
+
 Run `flutter run`
 
 **Build** 
-* Android: `flutter build apk`
-* iOS: `flutter build ios` 
+* Android: `flutter build apk` (`--debug` or `jks` key)
+* iOS: `flutter build ios` (`bundle ID`)
 
 ## Tech
 
